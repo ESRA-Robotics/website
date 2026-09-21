@@ -1,0 +1,30 @@
+name: Check site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Integrity check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 22 or newer: the breakpoint check uses the global WebSocket and
+      # import.meta.dirname, neither of which Node 20 has.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check the files
+        run: python3 scripts/check.py
+
+      # Renders every page at six widths in headless Chrome. The layout faults
+      # this repo has shipped were invisible in the markup and only showed up
+      # in a narrow window, so this runs on every change.
+      - name: Check every breakpoint
+        run: node scripts/check-breakpoints.mjs
