@@ -4,3 +4,7 @@ __pycache__/
 
 # macOS
 .DS_Store
+
+# Daily activity log for the workspace aggregator. Never commit it:
+# GitHub Pages serves this repo root publicly, so it would be published.
+outbox/
