@@ -61,7 +61,7 @@ Its body is **generated**. The text lives in
 
 ```python
 ("h2", "Heading Contact", "Contact"),
-("p",  "Contact Details", "Email: info@studentrobotics.eu"),
+("p",  "Contact Details", "Email: info@esrarobotics.eu"),
 ```
 
 `h2` is a section heading, `h3` a numbered subsection and `p` body text.

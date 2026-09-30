@@ -200,17 +200,6 @@ alone on purpose so that nobody guesses at a published fact.
 carefully against the current rules, but it is not legal advice, and only the
 board knows the facts behind some of the entries below.
 
-- **Contact address.** The site still shows `info@studentrobotics.eu`, in the
-  footers and throughout the legal page. It should almost certainly become
-  `info@esrarobotics.eu`, but only once that mailbox actually receives mail. An
-  imprint has to carry an address that works. When it does:
-
-  ```bash
-  python3 scripts/edit-text.py "info@studentrobotics.eu" "info@esrarobotics.eu"
-  ```
-
-  and change it in `scripts/legal_content.py`, then re-run `build-legal.py`.
-
 - **Telephone number.** The imprint currently gives an email address only.
   § 5 (1) no. 2 DDG asks for a means of rapid electronic contact and direct
   communication. The European Court of Justice has accepted email alone where

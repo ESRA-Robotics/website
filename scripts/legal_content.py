@@ -8,7 +8,7 @@ so they render as line breaks.
 
 ORG = "European Student Robotics Association (ESRA) e.V."
 ADDR = "Bayersdorferstraße 8\n80637 München\nGermany"
-EMAIL = "info@studentrobotics.eu"
+EMAIL = "info@esrarobotics.eu"
 
 BLOCKS = [
     # ---------------------------------------------------------------- imprint

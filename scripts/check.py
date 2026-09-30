@@ -26,8 +26,7 @@ What it enforces
 
 Warnings only
 -------------
-- References to the old studentrobotics.eu domain (the contact address is a
-  deliberate open item, see README).
+- Any reference to the old studentrobotics.eu domain.
 - A "Last Updated" footer date far in the past.
 """
 
@@ -295,29 +294,17 @@ def check_legal_content() -> None:
 
 def check_stale_content() -> None:
     """
-    The old domain should be gone everywhere except the contact address, which
-    is a deliberate open item: it stays until info@esrarobotics.eu receives
-    mail. See "Open items" in the README.
+    Nothing should point at the old studentrobotics.eu domain any more. The
+    contact address moved to info@esrarobotics.eu on 30 September 2026, which
+    was the last thing holding on to it.
     """
-    contact_hits = 0
-
     for path in iter_source_files():
         text = path.read_text(errors="replace")
         for match in re.finditer(r"studentrobotics\.eu", text):
-            start = max(0, match.start() - 40)
-            if "info@studentrobotics.eu" in text[start : match.end()]:
-                contact_hits += 1
-                continue
             line = text.count("\n", 0, match.start()) + 1
             warnings.append(
                 f"{rel(path)}:{line}: refers to the old studentrobotics.eu domain"
             )
-
-    if contact_hits:
-        warnings.append(
-            f"the contact address is still info@studentrobotics.eu "
-            f"({contact_hits} places). This is a known open item, see the README."
-        )
 
 
 def main() -> int:
