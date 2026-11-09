@@ -1,0 +1,3 @@
+
+# Calendar feeds require their committed RFC 5545 CRLF line endings.
+events/feeds/*.ics -text whitespace=trailing-space,space-before-tab,cr-at-eol

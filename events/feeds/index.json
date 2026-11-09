@@ -1,0 +1,137 @@
+{
+  "topics": [
+    {
+      "type": "Trips",
+      "origin": "all",
+      "rss": "/events/feeds/trips-all.xml",
+      "calendar": "/events/feeds/trips-all.ics"
+    },
+    {
+      "type": "Trips",
+      "origin": "original",
+      "rss": "/events/feeds/trips-original.xml",
+      "calendar": "/events/feeds/trips-original.ics"
+    },
+    {
+      "type": "Trips",
+      "origin": "community",
+      "rss": "/events/feeds/trips-community.xml",
+      "calendar": "/events/feeds/trips-community.ics"
+    },
+    {
+      "type": "Hackathons",
+      "origin": "all",
+      "rss": "/events/feeds/hackathons-all.xml",
+      "calendar": "/events/feeds/hackathons-all.ics"
+    },
+    {
+      "type": "Hackathons",
+      "origin": "original",
+      "rss": "/events/feeds/hackathons-original.xml",
+      "calendar": "/events/feeds/hackathons-original.ics"
+    },
+    {
+      "type": "Hackathons",
+      "origin": "community",
+      "rss": "/events/feeds/hackathons-community.xml",
+      "calendar": "/events/feeds/hackathons-community.ics"
+    },
+    {
+      "type": "Workshops",
+      "origin": "all",
+      "rss": "/events/feeds/workshops-all.xml",
+      "calendar": "/events/feeds/workshops-all.ics"
+    },
+    {
+      "type": "Workshops",
+      "origin": "original",
+      "rss": "/events/feeds/workshops-original.xml",
+      "calendar": "/events/feeds/workshops-original.ics"
+    },
+    {
+      "type": "Workshops",
+      "origin": "community",
+      "rss": "/events/feeds/workshops-community.xml",
+      "calendar": "/events/feeds/workshops-community.ics"
+    },
+    {
+      "type": "Meetups",
+      "origin": "all",
+      "rss": "/events/feeds/meetups-all.xml",
+      "calendar": "/events/feeds/meetups-all.ics"
+    },
+    {
+      "type": "Meetups",
+      "origin": "original",
+      "rss": "/events/feeds/meetups-original.xml",
+      "calendar": "/events/feeds/meetups-original.ics"
+    },
+    {
+      "type": "Meetups",
+      "origin": "community",
+      "rss": "/events/feeds/meetups-community.xml",
+      "calendar": "/events/feeds/meetups-community.ics"
+    },
+    {
+      "type": "Build weeks",
+      "origin": "all",
+      "rss": "/events/feeds/build-weeks-all.xml",
+      "calendar": "/events/feeds/build-weeks-all.ics"
+    },
+    {
+      "type": "Build weeks",
+      "origin": "original",
+      "rss": "/events/feeds/build-weeks-original.xml",
+      "calendar": "/events/feeds/build-weeks-original.ics"
+    },
+    {
+      "type": "Build weeks",
+      "origin": "community",
+      "rss": "/events/feeds/build-weeks-community.xml",
+      "calendar": "/events/feeds/build-weeks-community.ics"
+    },
+    {
+      "type": "Exchanges",
+      "origin": "all",
+      "rss": "/events/feeds/exchanges-all.xml",
+      "calendar": "/events/feeds/exchanges-all.ics"
+    },
+    {
+      "type": "Exchanges",
+      "origin": "original",
+      "rss": "/events/feeds/exchanges-original.xml",
+      "calendar": "/events/feeds/exchanges-original.ics"
+    },
+    {
+      "type": "Exchanges",
+      "origin": "community",
+      "rss": "/events/feeds/exchanges-community.xml",
+      "calendar": "/events/feeds/exchanges-community.ics"
+    }
+  ],
+  "clubs": [
+    {
+      "name": "ESRA",
+      "rss": "/events/feeds/club-923aeae81469e567.xml",
+      "calendar": "/events/feeds/club-923aeae81469e567.ics"
+    }
+  ],
+  "networks": {
+    "all": {
+      "rss": "/events/feeds/all.xml",
+      "calendar": "/events/feeds/all.ics"
+    },
+    "original": {
+      "rss": "/events/feeds/all-original.xml",
+      "calendar": "/events/feeds/all-original.ics"
+    },
+    "community": {
+      "rss": "/events/feeds/all-community.xml",
+      "calendar": "/events/feeds/all-community.ics"
+    }
+  },
+  "all": {
+    "rss": "/events/feeds/all.xml",
+    "calendar": "/events/feeds/all.ics"
+  }
+}

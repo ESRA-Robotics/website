@@ -1,105 +1,122 @@
-# Events
+# ESRA Events: static-only operation
 
-The main site stays a static GitHub Pages site with no build or new dependencies.
+The website stays on the existing GitHub Pages setup: **main branch, repository
+root**. There is no public API, database, SMTP server, runtime dependency or new
+hosting service. The custom Python backend has been removed from this branch;
+its earlier implementation remains recoverable in Git history. Ignored local
+private settings/data are not used and must never be published.
 
-- `/events/` lists announced events; currently the China Trip is the only one.
-- `/events/china-trip-2027/` is its dedicated detail page.
-- `assets/css/events.css` reuses the site's local fonts, monochrome styling,
-  rules and pale yellow accent. The new pages are plain HTML, with no hydration.
-- `assets/images/esra-china-trip-cover.png` is the existing ESRA trip artwork.
+## What is currently configured
 
-The homepage Events links are present in **both** `index.html` and the home
-JavaScript bundle so React hydration preserves them. The original Framer router
-has no event routes; these are ordinary anchors and load the static pages directly.
+Read-only inspection confirmed GitHub Pages and the Check site workflow. No mail
+integration is declared in repository source. Webhook settings and the Actions
+PR-creation policy could not be inspected with current connector permissions;
+this is not evidence that an external integration exists or does not exist.
+No wider permissions were requested and no live workflows, notifications or
+emails were triggered while implementing the static approach.
 
-## Content updates
+## Submissions and review
 
-Edit the two event HTML files directly. To add an event, create another folder
-under `events/` with an `index.html`, copy the detail page's navigation, metadata
-and stylesheet, and add its card to `events/index.html`. Update the page lists in
-`scripts/check.py` and `scripts/check-breakpoints.mjs`, then run both checks.
-Do not invent events to fill the listing.
+1. A member fills `/events/submit/`. The browser validates the form and prepares
+   a public GitHub issue. Nothing is saved or sent until the member reviews and
+   submits it on GitHub. A GitHub account is required. Long descriptions can be
+   copied as JSON into `.github/ISSUE_TEMPLATE/event.yml` instead of a long URL.
+2. Reviewers watch repository Issues and Pull requests and enable GitHub email
+   notifications. Each reviewer chooses and verifies their intended ESRA email
+   in their own GitHub account. The site does not need a sender account, email
+   credentials or a separate mailing list for these native notifications.
+3. A maintainer verifies the public organiser, event URL, dates, location, costs
+   and ESRA relevance. Run **Review community event** in Actions with the issue
+   number and `prepare`, or add an `event:reviewed` label. Decline uses the
+   `decline` decision or `event:declined` label and closes the issue.
+4. The workflow checks the actor has write/maintain/admin access, reads the issue
+   as data, validates and whitelists fields, generates the static catalogue and
+   feeds, and opens a **draft event-update PR**. It never executes submitter code
+   and never writes directly to main. Submitters cannot grant ESRA Original status.
+5. Review the snapshot and checks, mark the PR ready, and merge it. A human merge
+   into main uses the site's existing GitHub Pages publication flow.
 
-Dates for the China Trip are **provisional** (14–23 March 2027). The Luma copy
-and the Notion planning hub disagree about the cities, so this page leaves the
-route unconfirmed. Hosts, costs and funding remain unconfirmed too.
+The workflow becomes available after this branch is merged to the default branch.
+Optional labels can be created by a repository maintainer; workflow_dispatch works
+without them. The repository policy must permit Actions to create PRs for that
+convenience step. That policy was not changed. If it blocks PR creation, the run
+preserves prepared catalogue/feed files as an artifact, and a maintainer can open
+an update manually. Existing event review branches are never overwritten.
 
-The existing Luma event is https://luma.com/m5dh07ac (unlisted/private when
-reviewed). The page links there for current registration information. The
-separate Tally participant form was last verified as a draft; its public link
-must be verified before replacing the Luma call to action with an application
-button. Club membership uses its existing, separate Tally form.
+This intentionally replaces custom accept/decline email buttons with GitHub's
+authenticated review interface and native notification emails. Publication needs
+an actual reviewed merge; receiving or opening an email never publishes an event.
+Native GitHub email delivery and verified addresses are user settings; this task
+did not change them or send test notifications.
 
-## Optional events.esrarobotics.eu
+References: [issue forms](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms),
+[notification settings](https://docs.github.com/en/subscriptions-and-notifications/get-started/configuring-notifications),
+[workflow token behaviour](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
 
-The branch already works at `https://esrarobotics.eu/events/` after a normal
-merge and Pages deployment. **Do not change the root CNAME:** that would move
-the whole organisation website. GitHub Pages configures a custom domain per
-site, so an independent events host needs a second Pages site/repository.
+## Subscriptions without a mailing backend
 
-An optional export helper prepares the same pages for that second site:
+The event list and follow section share type, network and club filters. Listings
+have upcoming, happening-now and past views. Client-side Load more keeps the DOM
+bounded while every event comes from the static catalogue. ESRA Originals remain
+prominent; community cards show the club, location and type.
 
-```bash
+- RSS feeds: all events, each type, each network scope, and individual clubs.
+- Calendar feeds: corresponding static `.ics` URLs can be added to calendar apps
+  that support URL subscriptions. Refresh behaviour depends on the calendar app.
+- Filtered calendar download: a snapshot combining the visitor's chosen types,
+  network and club. It is not an automatically updating subscription.
+- Multiple RSS topics can be followed in the reader. Club feeds include all types
+  from that club; the page states this rather than pretending arbitrary filter
+  combinations are one server-maintained subscription.
+- GitHub Watch can provide repository email notifications. It is not a filtered
+  event newsletter. Configure it in GitHub; this site never collects addresses.
+
+A custom email newsletter or custom HTML review emails require an actual mailing
+provider or existing integration. None is configured by this implementation.
+The UI therefore offers working feeds/calendar subscriptions and does not show a
+nonfunctional email signup form. No API keys or tokens are placed in public HTML.
+
+## Content maintenance
+
+`events/catalog.json` contains approved public events and the shared event types.
+Add an event there (or use the reviewed-issue workflow), then run:
+
+```sh
+python3 scripts/build-event-feeds.py
+python3 scripts/build-event-feeds.py --check
+python3 scripts/sync-events-shell.py --check
+python3 -m unittest discover -s scripts -p 'test_static_events.py'
+node --test scripts/test-event-matching.mjs
+python3 scripts/check.py
+node scripts/check-breakpoints.mjs
+```
+
+Commit the rendered files in `events/feeds/`. No build runs for a website visitor.
+The generator uses standard-library Python and preserves retired club-feed URLs
+as empty feeds so existing subscriptions do not break. RSS contains up to 100
+recently published entries per feed, retaining past announcements as history; calendar feeds contain the matching events.
+Feed refresh is tied to published catalogue updates, not a background service.
+
+Navigation/footer templates live in `templates/events/`. Edit them and run
+`python3 scripts/sync-events-shell.py` before committing the rendered HTML.
+The existing Framer homepage still needs edits in both HTML and its hydration
+bundle. The standalone event pages do not hydrate.
+
+## China and optional subdomain
+
+`/events/china-trip-2027/` retains the ESRA Original delegation page and provisional
+Notion-grounded outreach targets. See [source reconciliation](china-trip-content.md).
+Hosts, route, funding and costs are not confirmed. The unpublished participant
+Tally form is not linked as a public application.
+
+The main-site `CNAME` remains `esrarobotics.eu`. An optional static export uses:
+
+```sh
 python3 scripts/export-events.py /tmp/esra-events-site
 ```
 
-Use a new or empty directory outside this checkout. The export contains the
-listing at `/`, retains `/events/` as an alias, includes the trip detail page
-and local assets, and directs organisation/legal navigation to the main site.
-Canonical URLs continue pointing to the main site's `/events/` pages so there
-is one canonical copy. The export alone does not publish or modify DNS.
-
-To activate the subdomain:
-
-1. Create a separate GitHub Pages repository and publish the exported contents.
-2. Verify domain ownership in the ESRA GitHub organisation and set that site's
-   custom domain to `events.esrarobotics.eu`.
-3. At the DNS provider, set a CNAME for `events` to `esra-robotics.github.io`
-   (no repository name or URL path).
-4. Once GitHub verifies DNS and issues the certificate, enable Enforce HTTPS.
-5. Verify the listing, detail page, images and links on the new host. Re-export
-   and deploy this second site whenever event content changes.
-
-Keep the main navigation pointed to `/events/` until the subdomain is live;
-then change its href in both homepage copies if the subdomain is preferred.
-
-GitHub reference: [Custom domains and GitHub Pages](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages).
-
-## Community submissions and newsletters
-
-`/events/submit/` accepts event details and the organiser's private contact email.
-`/events/rules/` explains relevance, organiser attribution, review and the service
-privacy supplement. `/events/review/` uses expiring links from trusted-reviewer
-HTML emails; accepting publishes through the API without changing Git. The
-previous GitHub-issue-only submission path is superseded.
-
-The static site stays independently usable. `events/catalog.json` defines the
-shared event types and ESRA's seed event; `events/config.json` optionally points
-to the API host. Community listings are fetched from the approved, paginated feed; filters are applied before pagination. Matching ESRA Originals are returned separately from community pages.
-Organiser, location and event type are visible; ESRA Original remains a prominent
-label reserved for ESRA programming. Filters support multiple types, network and
-club, plus separate upcoming, happening-now and past views. Matching filter state
-can be copied to newsletter signup. Filters are shareable in the URL, not cookies.
-
-Newsletter signup uses explicit consent and email confirmation. Preferences and
-unsubscribe are managed at `/events/preferences/` through secure emailed links.
-Weekly digests exclude past events and use the subscriber's selected filters.
-
-See [the backend deployment guide](../backend/README.md) for the persistent API,
-trusted reviewers, sender/provider setup, SMTP dispatcher, digest and retention
-jobs. No production service, SMTP delivery or scheduling has been activated.
-Do not deploy private configuration, databases or test email previews to Pages.
-
-## China content
-
-See [source reconciliation](china-trip-content.md). Notion's academic/company
-names are outreach targets, not confirmed visits. ESRA network logos are not
-selected-fellow or host endorsements. Destination photos do not imply past visits.
-
-## Shared shells
-
-Edit navigation/footer templates in `templates/events/`, then run
-`python3 scripts/sync-events-shell.py`. CI checks the committed pages match.
-These are optional maintenance tools; Pages still serves committed HTML without
-a build. The hand-written event matching module has Node tests, while backend
-integration tests exercise migration, pagination and concurrent queue behaviour.
+The export includes the catalogue, feeds, event pages and local assets, with a
+CNAME for `events.esrarobotics.eu`. It needs a separate Pages site/repository and
+DNS CNAME `events` → `esra-robotics.github.io`; exporting does not activate either.
+Organisation/legal links point back to the main website. Feed URLs use the main
+website as their canonical host, avoiding separate subscription identities.

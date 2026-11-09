@@ -26,8 +26,11 @@ jobs:
       - name: Test event matching
         run: node --test scripts/test-event-matching.mjs
 
-      - name: Test event service (email mocked)
-        run: python3 -m unittest discover -s backend -p 'test_*.py'
+      - name: Test static event moderation and feeds
+        run: python3 -m unittest discover -s scripts -p 'test_static_events.py'
+
+      - name: Check committed subscription feeds
+        run: python3 scripts/build-event-feeds.py --check
 
       - name: Check the files
         run: python3 scripts/check.py

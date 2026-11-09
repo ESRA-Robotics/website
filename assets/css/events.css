@@ -168,3 +168,5 @@
 @media(max-width:809px){ .events-page .newsletter { padding:24px; } }
 
 .events-page #listing-types { grid-column:1 / -1; }
+.events-page .subscription-links { display:flex; flex-wrap:wrap; align-items:center; gap:14px 24px; margin:24px 0; }
+.events-page .subscription-links > p { flex-basis:100%; }

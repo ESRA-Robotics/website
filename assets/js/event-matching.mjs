@@ -7,3 +7,13 @@ export function matchesEvent(event, {types, origin='all', club='', period='upcom
 export function compareEvents(period) {
   return (a,b)=>Number(b.original)-Number(a.original)||(period==='past'?new Date(b.start)-new Date(a.start):new Date(a.start)-new Date(b.start))
 }
+
+/** RFC 5545 content lines fold at 75 octets without splitting UTF-8 characters. */
+export function foldCalendarLines(lines) {
+  const encoder=new TextEncoder()
+  return lines.flatMap(line=>{
+    const parts=[];let part=''
+    for(const char of line){if(encoder.encode(part+char).length>75){parts.push(part);part=' '}part+=char}
+    return [...parts,part]
+  })
+}

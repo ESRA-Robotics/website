@@ -70,9 +70,9 @@ const MUST_NOT_BE_COVERED = ['JOIN ESRA', 'Who are we looking for?', 'STRONG PAR
 const IMPRINT_REQUIRED = ['Register number: VR 211579', 'DE462819831', 'Privacy Policy', 'Controller']
 const EVENT_PAGES = [
   ['/events/', ['EVENTS', 'CHINA', 'TRIP 2027', 'Explore the trip', 'Submit an event', 'YOUR EVENT.']],
-  ['/events/submit/', ['YOUR EVENT.', 'Event description', 'Submit for review']],
+  ['/events/submit/', ['YOUR EVENT.', 'Event description', 'Prepare submission']],
   ['/events/review/', ['REVIEW.', 'Review guidelines']],
-  ['/events/preferences/', ['PREFERENCES.', 'secure link']],
+  ['/events/preferences/', ['FOLLOW YOUR INTERESTS.', 'static website']],
   ['/events/rules/', ['SHARED RULES.', 'How review works']],
   ['/events/china-trip-2027/', ['CHINA', 'TRIP 2027', '14–23 March 2027', 'View on Luma', 'Before making plans', 'Meet your delegation.', 'PROOF OF WORK.', 'READY TO']],
 ]

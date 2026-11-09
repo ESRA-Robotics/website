@@ -238,3 +238,8 @@ The events listing is at `/events/`, with a dedicated China Trip page at
 `/events/china-trip-2027/`. Both are plain static HTML using existing ESRA
 branding. See [the events guide](docs/events.md) for adding events, provisional
 trip details, and the optional `events.esrarobotics.eu` export/deployment setup.
+
+Event submissions now use public GitHub issues and maintainer-reviewed updates.
+Review notifications use GitHub's own email settings. Subscriptions use static
+RSS/calendar feeds; no custom backend, SMTP credentials or email-address database
+is needed. See the events guide for the review workflow and setup limits.

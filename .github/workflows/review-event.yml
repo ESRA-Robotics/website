@@ -1,0 +1,53 @@
+name: Review community event
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Public event submission issue number
+        required: true
+        type: string
+      decision:
+        description: Prepare an update for review, or decline the submission
+        required: true
+        default: prepare
+        type: choice
+        options:
+          - prepare
+          - decline
+  issues:
+    types: [labeled]
+permissions:
+  contents: read
+concurrency:
+  group: event-review-${{ github.event.issue.number || inputs.issue_number }}
+  cancel-in-progress: false
+jobs:
+  review:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'event:reviewed' || github.event.label.name == 'event:declined'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      # Always use trusted default-branch code, never code from the submitter.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate maintainer and prepare the reviewed event
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/github-event-review.py
+      # A repository policy can prohibit token-created PRs. Keep a manual fallback.
+      - name: Preserve prepared static files for maintainer review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewed-event-static-files
+          path: |
+            events/catalog.json
+            events/feeds/
+          if-no-files-found: ignore
