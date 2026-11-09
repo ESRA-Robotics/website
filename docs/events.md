@@ -1,80 +1,53 @@
-# ESRA Events: static-only operation
+# ESRA Events
 
-The website stays on the existing GitHub Pages setup: **main branch, repository
-root**. There is no public API, database, SMTP server, runtime dependency or new
-hosting service. The custom Python backend has been removed from this branch;
-its earlier implementation remains recoverable in Git history. Ignored local
-private settings/data are not used and must never be published.
-
-## What is currently configured
-
-Read-only inspection confirmed GitHub Pages and the Check site workflow. No mail
-integration is declared in repository source. Webhook settings and the Actions
-PR-creation policy could not be inspected with current connector permissions;
-this is not evidence that an external integration exists or does not exist.
-No wider permissions were requested and no live workflows, notifications or
-emails were triggered while implementing the static approach.
+The attendee-facing website remains static on GitHub Pages, main branch,
+repository root. Event discovery, detail pages, filters and RSS/calendar feeds
+work without a backend. The optional mail relay in [mail-gateway](../mail-gateway/README.md)
+connects the on-site signup and ESRA organiser sign-in to Brevo and GitHub.
+It is prepared but not deployed: events/mail-config.json has an empty endpoint,
+so the UI reports unavailable service rather than pretending to save addresses.
+No provider account, list, campaign or secrets were configured, and no mail sent.
 
 ## Submissions and review
 
-1. A member fills `/events/submit/`. The browser validates the form and prepares
-   a public GitHub issue. Nothing is saved or sent until the member reviews and
-   submits it on GitHub. A GitHub account is required. Long descriptions can be
-   copied as JSON into `.github/ISSUE_TEMPLATE/event.yml` instead of a long URL.
-2. Reviewers watch repository Issues and Pull requests and enable GitHub email
-   notifications. Each reviewer chooses and verifies their intended ESRA email
-   in their own GitHub account. The site does not need a sender account, email
-   credentials or a separate mailing list for these native notifications.
-3. A maintainer verifies the public organiser, event URL, dates, location, costs
-   and ESRA relevance. Run **Review community event** in Actions with the issue
-   number and `prepare`, or add an `event:reviewed` label. Decline uses the
-   `decline` decision or `event:declined` label and closes the issue.
-4. The workflow checks the actor has write/maintain/admin access, reads the issue
-   as data, validates and whitelists fields, generates the static catalogue and
-   feeds, and opens a **draft event-update PR**. It never executes submitter code
-   and never writes directly to main. Submitters cannot grant ESRA Original status.
-5. Review the snapshot and checks, mark the PR ready, and merge it. A human merge
-   into main uses the site's existing GitHub Pages publication flow.
+An organiser requests a private sign-in link at /events/submit/ using their
+exact @esrarobotics.eu address. The relay validates inbox access with a signed
+20-minute link, then accepts a public event proposal into a GitHub issue. Private
+organiser email stays out of that issue. The form is unavailable without valid
+access. Opening a GitHub issue manually does not bypass this check: the review
+workflow verifies the relay's signed payload using EVENT_SUBMISSION_SECRET.
 
-The workflow becomes available after this branch is merged to the default branch.
-Optional labels can be created by a repository maintainer; workflow_dispatch works
-without them. The repository policy must permit Actions to create PRs for that
-convenience step. That policy was not changed. If it blocks PR creation, the run
-preserves prepared catalogue/feed files as an artifact, and a maintainer can open
-an update manually. Existing event review branches are never overwritten.
+A maintainer checks relevance, organiser, dates, registration, costs and accuracy.
+Run Review community event with the issue number and prepare, or apply the
+maintainer-only event:reviewed decision. The workflow checks actor permissions,
+validates and whitelists fields, updates catalogue/feeds and prepares a draft PR.
+It never executes submitter code or directly publishes to main. Submitters cannot
+grant Original status. Decline closes the issue. Publication requires a reviewed
+human merge and the existing Pages flow. Actions must be permitted to create PRs;
+otherwise the prepared files remain available as an artifact. These workflows
+become available after merging the branch to the default branch.
 
-This intentionally replaces custom accept/decline email buttons with GitHub's
-authenticated review interface and native notification emails. Publication needs
-an actual reviewed merge; receiving or opening an email never publishes an event.
-Native GitHub email delivery and verified addresses are user settings; this task
-did not change them or send test notifications.
+Review notification delivery remains GitHub-native. The trusted reviewers are
+fschroeders@esrarobotics.eu, lwitte@esrarobotics.eu and pvoelker@esrarobotics.eu;
+each must configure a verified notification address in their own GitHub account.
+This task did not configure those accounts. Custom HTML accept/decline emails
+are not implemented; authenticated GitHub review remains required.
 
-References: [issue forms](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms),
-[notification settings](https://docs.github.com/en/subscriptions-and-notifications/get-started/configuring-notifications),
-[workflow token behaviour](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
+## Subscriptions and discovery
 
-## Subscriptions without a mailing backend
+The primary Subscribe to all events button opens a simple email/consent dialog.
+The relay requests Brevo double opt-in; confirmed contacts live in the provider,
+not the repository. Configure a Brevo RSS campaign against /events/feeds/all.xml
+for recurring updates. Neither the campaign nor live collection is activated.
+Provider-managed unsubscribe links handle removal. Activation and privacy
+requirements are documented with the relay.
 
-The event list and follow section share type, network and club filters. Listings
-have upcoming, happening-now and past views. Client-side Load more keeps the DOM
-bounded while every event comes from the static catalogue. ESRA Originals remain
-prominent; community cards show the club, location and type.
-
-- RSS feeds: all events, each type, each network scope, and individual clubs.
-- Calendar feeds: corresponding static `.ics` URLs can be added to calendar apps
-  that support URL subscriptions. Refresh behaviour depends on the calendar app.
-- Filtered calendar download: a snapshot combining the visitor's chosen types,
-  network and club. It is not an automatically updating subscription.
-- Multiple RSS topics can be followed in the reader. Club feeds include all types
-  from that club; the page states this rather than pretending arbitrary filter
-  combinations are one server-maintained subscription.
-- GitHub Watch can provide repository email notifications. It is not a filtered
-  event newsletter. Configure it in GitHub; this site never collects addresses.
-
-A custom email newsletter or custom HTML review emails require an actual mailing
-provider or existing integration. None is configured by this implementation.
-The UI therefore offers working feeds/calendar subscriptions and does not show a
-nonfunctional email signup form. No API keys or tokens are placed in public HTML.
+Filters sit inside a quiet disclosure. Upcoming, ongoing and past events stay
+separate. Scheduled events are paginated; undated proposals appear separately
+under On the drawing board and are excluded from calendars. Original events have
+prominent branding; community listings show their club and location. RSS and
+calendar feeds remain available as alternatives, including type/club feeds.
+The proposed FC Isar robot-football hackathon has no confirmed date or venue.
 
 ## Content maintenance
 

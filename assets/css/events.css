@@ -170,3 +170,27 @@
 .events-page #listing-types { grid-column:1 / -1; }
 .events-page .subscription-links { display:flex; flex-wrap:wrap; align-items:center; gap:14px 24px; margin:24px 0; }
 .events-page .subscription-links > p { flex-basis:100%; }
+/* Attendee-first overview: one primary action, with organiser tools kept quiet. */
+.events-page main > h1:first-child { font-size:clamp(60px,10.5vw,150px); }
+.events-page .discovery { padding:14px 0; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; }
+.events-page .quiet-filters { width:100%; }
+.events-page .quiet-filters summary { cursor:pointer; font:500 14px/1.5 "Events Mono",monospace; text-decoration:underline; text-underline-offset:4px; }
+.events-page .quiet-filters[open] .filter-grid { margin-top:20px; }
+.events-page .period-tabs { margin:8px 0; gap:8px; }
+.events-page .period-tabs button { padding:6px 10px; font-size:13px; }
+.events-page #result-count { margin:0 0 0 auto; font-size:13px; }
+.events-page .hackathon-feature { display:grid; grid-template-columns:1fr 1.15fr; gap:40px; padding:32px 0 45px; border-bottom:1px solid var(--rule); }
+.events-page .hackathon-feature img { width:100%; height:auto; display:block; }
+.events-page .hackathon-feature > div { align-self:center; }
+.events-page .follow-banner { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:30px; padding:50px 0; }
+.events-page .follow-banner p { margin-bottom:0; }
+.events-page .organiser-link { border-top:1px solid var(--rule); padding:18px 0 30px; font-size:14px; }
+.events-page dialog { width:min(92vw,560px); max-height:90vh; overflow:auto; border:1px solid #222; background:var(--paper); color:var(--ink); padding:38px; }
+.events-page dialog::backdrop { background:rgb(0 0 0 / .55); }
+.events-page dialog h2 { font-size:clamp(30px,4vw,45px); }
+.events-page .dialog-close { position:absolute; top:10px; right:14px; background:none; border:0; font-size:32px; color:var(--ink); }
+.events-page #newsletter-form { display:grid; gap:22px; margin:25px 0; }
+.events-page .feed-alternative { margin-top:25px; font-size:13px; }
+.events-page .detail-hero #trip-title { font-size:clamp(44px,5.4vw,82px); }
+.events-page .trip-promise { padding:45px 0; border-top:1px solid var(--rule); }
+@media(max-width:809px){ .events-page .hackathon-feature { grid-template-columns:1fr; gap:24px; } .events-page dialog { padding:28px 22px; } .events-page #result-count { margin-left:0; } }

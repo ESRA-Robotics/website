@@ -1,4 +1,38 @@
 {
-  "types": ["Trips", "Hackathons", "Workshops", "Meetups", "Build weeks", "Exchanges"],
-  "events": [{"id":"china-trip-2027","title":"China Trip 2027","type":"Trips","organiser":"ESRA","location":"China · Hong Kong / Shenzhen proposed","start":"2027-03-14T00:00:00+08:00","end":"2027-03-23T23:59:59+08:00","url":"/events/china-trip-2027/","description":"An ESRA robotics delegation. Technical exchange, university and company visits. Dates and route provisional.","original":true}]
+  "types": [
+    "Trips",
+    "Hackathons",
+    "Workshops",
+    "Meetups",
+    "Build weeks",
+    "Exchanges"
+  ],
+  "events": [
+    {
+      "id": "china-trip-2027",
+      "title": "Inside China’s Robotics Frontier",
+      "type": "Trips",
+      "organiser": "ESRA",
+      "location": "China · Hong Kong / Shenzhen proposed",
+      "start": "2027-03-14T00:00:00+08:00",
+      "end": "2027-03-23T23:59:59+08:00",
+      "url": "/events/china-trip-2027/",
+      "description": "Go where robotics gets built. A proposed ESRA delegation connecting European builders with robotics labs, companies and student communities in China.",
+      "original": true
+    }
+  ],
+  "planned": [
+    {
+      "id": "robot-football-hackathon",
+      "title": "Code. Kick. Repeat.",
+      "subtitle": "Robot Football Hackathon",
+      "type": "Hackathons",
+      "organiser": "ESRA × FC Isar Robotics",
+      "location": "Location to be announced",
+      "status": "In planning",
+      "url": "/events/robot-football-hackathon/",
+      "description": "Take a soccer robot from seeing the ball to playing the game. A proposed hands-on collaboration with FC Isar Robotics. Dates and programme to follow.",
+      "original": false
+    }
+  ]
 }

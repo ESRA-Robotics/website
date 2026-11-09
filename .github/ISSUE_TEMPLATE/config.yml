@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Submit an ESRA event
+    url: https://esrarobotics.eu/events/submit/
+    about: Sign in using your verified @esrarobotics.eu email address.

@@ -240,6 +240,7 @@ branding. See [the events guide](docs/events.md) for adding events, provisional
 trip details, and the optional `events.esrarobotics.eu` export/deployment setup.
 
 Event submissions now use public GitHub issues and maintainer-reviewed updates.
-Review notifications use GitHub's own email settings. Subscriptions use static
-RSS/calendar feeds; no custom backend, SMTP credentials or email-address database
-is needed. See the events guide for the review workflow and setup limits.
+Review notifications use GitHub's email settings. A small optional Brevo/Cloudflare
+relay connects on-site email signup and verified ESRA organiser submissions;
+activation still requires provider credentials and deployment. The frontend and
+RSS/calendar feeds remain static. See [mail relay setup](mail-gateway/README.md).

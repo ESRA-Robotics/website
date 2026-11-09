@@ -14,3 +14,7 @@ backend/.env.local
 backend/private/
 *.sqlite3
 *.sqlite3-*
+
+# Serverless mail provider credentials stay outside the published site.
+mail-gateway/.dev.vars
+mail-gateway/.wrangler/

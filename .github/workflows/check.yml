@@ -26,6 +26,12 @@ jobs:
       - name: Test event matching
         run: node --test scripts/test-event-matching.mjs
 
+      - name: Test mail gateway without network or delivery
+        run: node --test mail-gateway/test-worker.mjs
+
+      - name: Test verified organiser attestations
+        run: python3 -m unittest discover -s scripts -p 'test_event_access.py'
+
       - name: Test static event moderation and feeds
         run: python3 -m unittest discover -s scripts -p 'test_static_events.py'
 

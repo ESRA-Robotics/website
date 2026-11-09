@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 from urllib.parse import quote
+from verify_event_access import verify_issue
 
 ROOT=Path(__file__).resolve().parents[1]
 def run(*args,**kwargs):return subprocess.run(args,cwd=ROOT,text=True,check=True,**kwargs)
@@ -29,6 +30,7 @@ def main():
         api(f'repos/{repo}/issues/{number}','PATCH',{'state':'closed','state_reason':'not_planned'})
         print('Submission declined on GitHub. No website content changed.');return
     if issue.get('state')!='open':raise SystemExit('Reopen the issue before preparing a new event update')
+    verify_issue(issue.get('body'),os.environ.get('EVENT_SUBMISSION_SECRET',''))
     path=Path(os.environ['RUNNER_TEMP'])/'event-issue.json';path.write_text(json.dumps(issue))
     run('python3','scripts/prepare-event-review.py',str(path))
     run('python3','scripts/check.py')

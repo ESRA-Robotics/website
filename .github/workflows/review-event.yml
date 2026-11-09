@@ -40,6 +40,7 @@ jobs:
       - name: Validate maintainer and prepare the reviewed event
         env:
           GH_TOKEN: ${{ github.token }}
+          EVENT_SUBMISSION_SECRET: ${{ secrets.EVENT_SUBMISSION_SECRET }}
         run: python3 scripts/github-event-review.py
       # A repository policy can prohibit token-created PRs. Keep a manual fallback.
       - name: Preserve prepared static files for maintainer review
