@@ -41,3 +41,17 @@ organiser direction names Shenzhen and Shanghai as the working route; this
 supersedes the earlier Hong Kong/Shenzhen emphasis without confirming any hosts.
 Previously researched Shenzhen outreach targets remain explicitly proposed.
 The FC Isar build challenge is a small supporting programme item.
+
+## Latest programme copy direction
+
+The organiser requested a confident presentation of the current plan rather
+than repeated outreach/confirmation caveats: company and factory visits,
+university exchanges and hackathons in Shenzhen and Shanghai. The website keeps
+one concise note that the programme can evolve and final travel/cost details
+come before commitment. This copy direction is not new evidence of confirmed
+host agreements. No acceptance rate or comparative ranking is asserted.
+
+The hackathon is specifically humanoid soccer: European delegates build with
+Chinese students on Booster T2 robots for 12–24 hours and compete against FC Isar
+Robotics' software. It remains a supporting programme item. Recruitment copy
+now targets Europe's best student robotics talent and requires ESRA selection.
