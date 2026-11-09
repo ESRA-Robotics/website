@@ -260,3 +260,28 @@
  .events-page .china-facts > div + div { border-top:1px solid var(--rule); padding-top:18px; }
  .events-page .china-photo figcaption { font-size:11px; }
 }
+/* China programme: one chronological overview, with activity and takeaway. */
+.events-page .programme-heading { display:flex; align-items:end; justify-content:space-between; flex-wrap:wrap; gap:20px; padding:30px 0 24px; }
+.events-page .programme-heading h2 { margin:0; }
+.events-page .programme-subject { background:var(--yellow); padding:9px 12px; font-size:12px; margin:0; }
+.events-page .programme-route { display:flex; flex-wrap:wrap; gap:14px 24px; background:var(--ink); color:var(--paper); padding:16px 20px; }
+.events-page .programme-route span:last-child { color:var(--yellow); }
+.events-page .programme-itinerary { list-style:none; padding:0; margin:0; }
+.events-page .programme-itinerary > li { display:grid; grid-template-columns:155px minmax(0,1fr) minmax(160px,220px); gap:32px; padding:28px 0; border-bottom:1px solid var(--rule); }
+.events-page .programme-day { display:flex; flex-direction:column; gap:3px; }
+.events-page .programme-day strong { font-size:22px; font-weight:500; letter-spacing:-.035em; }
+.events-page .programme-day > span:last-child { margin-top:10px; font-size:12px; }
+.events-page .programme-itinerary h3 { margin:0 0 10px; }
+.events-page .programme-itinerary p { margin:0; }
+.events-page .programme-outcome { font-size:15px; border-left:1px solid var(--rule); padding-left:22px; }
+.events-page .programme-outcome span { display:block; margin-bottom:10px; font-size:11px; }
+.events-page .programme-beyond { display:grid; grid-template-columns:1fr 1fr; gap:40px; padding:26px 0 6px; }
+.events-page .programme-beyond p { margin-bottom:10px; }
+@media(max-width:809px){
+ .events-page .programme-itinerary > li { grid-template-columns:1fr; gap:16px; }
+ .events-page .programme-day { display:grid; grid-template-columns:auto 1fr; gap:3px 18px; align-items:center; }
+ .events-page .programme-day > span:last-child { grid-column:1 / -1; margin-top:3px; }
+ .events-page .programme-outcome { padding-left:14px; }
+ .events-page .programme-outcome span { margin-bottom:4px; }
+ .events-page .programme-beyond { grid-template-columns:1fr; gap:16px; }
+}

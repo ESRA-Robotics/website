@@ -74,7 +74,7 @@ const EVENT_PAGES = [
   ['/events/review/', ['REVIEW', 'Review guidelines']],
   ['/events/preferences/', ['FOLLOW YOUR INTERESTS', 'static website']],
   ['/events/rules/', ['SHARED RULES', 'How review works']],
-  ['/events/china-trip-2027/', ['CHINA', 'FRONTIER', '14–23 March 2027', 'ESRA ORIGINAL', 'Apply on Luma', 'Apply for the ESRA delegation', 'Shenzhen + Shanghai', 'FOLLOW ROBOTICS', 'Europe’s best robotics talent', 'Company & university visits', 'Chinese students', 'Booster T2', 'FC Isar Robotics', 'READY TO']],
+  ['/events/china-trip-2027/', ['CHINA', 'FRONTIER', '14–23 March 2027', 'ESRA ORIGINAL', 'Apply on Luma', 'Apply for the ESRA delegation', 'Shenzhen + Shanghai', 'TEN DAYS', 'Subject to change', 'Inside the companies and factories', 'Days 8–9', 'Bring the knowledge home', 'Europe’s best robotics talent', 'Company & university visits', 'Chinese students', 'Booster T2', 'FC Isar Robotics', 'READY TO']],
 ]
 
 const MIME = {

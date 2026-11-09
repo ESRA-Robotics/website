@@ -55,3 +55,19 @@ The hackathon is specifically humanoid soccer: European delegates build with
 Chinese students on Booster T2 robots for 12–24 hours and compete against FC Isar
 Robotics' software. It remains a supporting programme item. Recruitment copy
 now targets Europe's best student robotics talent and requires ESRA selection.
+
+## Programme structure and Notion working home
+
+[China 2027 — Programme & itinerary](https://www.notion.so/3b1cf4d55d7680a386aed67ea530c17d)
+reuses the formerly blank child page of the original ESRA China Trip notes.
+It contains the proposed phase structure, a ten-day morning/afternoon/evening
+schedule, host planning, hackathon setup and organiser checklist. No existing
+meeting notes or historical planning were overwritten.
+
+The website mirrors seven working phases for 14–23 March: arrival, Shenzhen
+company/factory visits, labs and hardware infrastructure, the joint student
+soccer hackathon, transfer, Shanghai research/deployment visits, and synthesis /
+departures. The 12–24-hour build sprint sits inside Days 5–6, including onboarding
+and debrief rather than implying two full days of competition. These allocations
+are new programme proposals, labelled subject to change, not confirmed bookings.
+Notion and the static page are maintained manually; there is no automatic sync.
