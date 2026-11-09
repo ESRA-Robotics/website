@@ -227,3 +227,36 @@
  .events-page .original-brand img { width:52px; }
  .events-page .original-brand strong { font-size:16px; }
 }
+/* Concise China editorial: real photography and programme access first. */
+.events-page .china-launch { display:grid; grid-template-columns:1.15fr 1fr; gap:64px; padding:36px 0; }
+.events-page .china-launch h1 { font-size:clamp(45px,5.4vw,82px); margin:22px 0 0; }
+.events-page .china-pitch { align-self:end; padding-bottom:6px; }
+.events-page .china-pitch .lede { font-size:clamp(23px,2.1vw,30px); line-height:1.3; letter-spacing:-.035em; }
+.events-page .china-pitch .button { margin-top:12px; }
+.events-page .china-photo { margin:6px 0 0; position:relative; background:var(--ink); }
+.events-page .china-photo img { display:block; width:100%; height:clamp(250px,30vw,430px); object-fit:cover; }
+.events-page .china-photo figcaption { padding:12px 18px; color:var(--paper); }
+.events-page .china-facts { display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid var(--rule); padding:24px 0; gap:24px; }
+.events-page .china-facts span,.events-page .china-facts strong,.events-page .china-facts small { display:block; }
+.events-page .china-facts strong { font-size:clamp(19px,2vw,27px); font-weight:500; margin:6px 0; letter-spacing:-.035em; }
+.events-page .china-access { padding:42px 0 0; }
+.events-page .china-access > h2 { margin:32px 0; }
+.events-page .china-cities { display:grid; grid-template-columns:1fr 1fr; gap:50px; }
+.events-page .china-cities h3 { margin:12px 0; }
+.events-page .outreach-strip { border-block:1px solid var(--rule); padding:22px 0; margin-top:18px; }
+.events-page .outreach-strip p { margin-bottom:10px; }
+.events-page .outreach-strip small { display:block; }
+.events-page .china-infrastructure { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; margin:44px 0; }
+.events-page .china-infrastructure img { display:block; width:100%; height:auto; }
+.events-page .china-build-session { border-left:4px solid var(--ink); padding:16px 24px; background:var(--yellow); max-width:850px; margin:0 0 44px; }
+.events-page .china-build-session h3 { margin:10px 0; }
+.events-page .china-build-session p:last-child { margin-bottom:0; }
+.events-page .china-cohort { padding:0 0 30px; }
+.events-page .china-cohort > p { max-width:750px; }
+@media(max-width:809px){
+ .events-page .china-launch,.events-page .china-cities,.events-page .china-infrastructure { grid-template-columns:1fr; gap:26px; }
+ .events-page .china-launch { padding:26px 0; }
+ .events-page .china-facts { grid-template-columns:1fr; gap:18px; }
+ .events-page .china-facts > div + div { border-top:1px solid var(--rule); padding-top:18px; }
+ .events-page .china-photo figcaption { font-size:11px; }
+}

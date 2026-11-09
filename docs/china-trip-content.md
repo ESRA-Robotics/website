@@ -34,6 +34,10 @@ The native participant form and endpoint were removed. On 9 November the
 organiser clarified that FC Isar Robotics participates in China, with a planned
 12–24-hour humanoid hackathon on Booster T2 robots and a challenge against the
 team. It is no longer a separate event listing. Final platform access, location,
-duration and challenge details are not yet confirmed. The new cover is an
-AI-generated concept illustration, not a depiction of a Booster T2 robot or a
-record of confirmed visits.
+duration and challenge details are not yet confirmed. The generated cover was subsequently rejected and removed. The page now uses
+only the existing attributed destination photographs. Copy is substantially
+shorter and emphasises company, laboratory and infrastructure access. The latest
+organiser direction names Shenzhen and Shanghai as the working route; this
+supersedes the earlier Hong Kong/Shenzhen emphasis without confirming any hosts.
+Previously researched Shenzhen outreach targets remain explicitly proposed.
+The FC Isar build challenge is a small supporting programme item.
