@@ -285,3 +285,6 @@
  .events-page .programme-outcome span { margin-bottom:4px; }
  .events-page .programme-beyond { grid-template-columns:1fr; gap:12px; }
 }
+
+.events-page .isar-programme-link { background:var(--yellow); font-weight:600; padding:2px 5px; text-decoration:underline; text-underline-offset:3px; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+.events-page .isar-programme-link:hover { background:#ffe58a; }
