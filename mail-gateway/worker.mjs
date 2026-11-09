@@ -68,6 +68,26 @@ export default {async fetch(request,env){
       await provider(env,'/smtp/email',{sender:{email:env.EMAIL_FROM,name:'ESRA Events'},to:[{email:address}],subject:'Your ESRA organiser sign-in link',htmlContent:'<html><body style="background:#f3f4f1;color:#222;font-family:Arial;padding:32px"><p>ESRA / ORGANISERS</p><h1>Your next event starts here.</h1><p>Use this private link to submit an event. It expires in 20 minutes.</p><p><a href="'+html(link)+'" style="display:inline-block;background:#fff0b5;padding:16px;color:#222">Open ESRA event submission</a></p><p>If you did not request this, ignore this email.</p></body></html>'})
       return reply({message:'A private sign-in link has been requested for your ESRA inbox.'},202)
     }
+    if(path==='/applications/china'){
+      // Participant details stay private. Never create a public GitHub issue.
+      if(env.APPLICATIONS_ENABLED!=='true'||!env.APPLICATION_REVIEWERS||!env.EMAIL_FROM)return reply({error:'Applications are not open yet. Please check back for updates.'},503)
+      if(data.consent!==true)throw Error('Please agree to application review and contact.')
+      if(data.website)throw Error('Please check your application.')
+      const application={email:email(data.email)}
+      for(const [field,min,max] of [['name',1,160],['organisation',1,160],['work',80,3000],['motivation',60,2000],['contribution',60,2000]]){
+        const value=String(data[field]||'').trim()
+        if(value.length<min||value.length>max||/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(value))throw Error('Please check '+field+'.')
+        application[field]=value
+      }
+      const portfolio=new URL(data.portfolio)
+      if(portfolio.protocol!=='https:'||portfolio.username||portfolio.password||portfolio.href.length>1000)throw Error('Use an HTTPS project or portfolio link.')
+      application.portfolio=portfolio.href
+      const reviewers=env.APPLICATION_REVIEWERS.split(',').map(value=>({email:memberEmail(value)}))
+      if(!reviewers.length||reviewers.length>5)throw Error('Application review is not configured.')
+      const content=Object.entries(application).map(([field,value])=>'<h2>'+html(field)+'</h2><p style="white-space:pre-wrap">'+html(value)+'</p>').join('')
+      await provider(env,'/smtp/email',{sender:{email:env.EMAIL_FROM,name:'ESRA Applications'},to:reviewers,subject:'China delegation 2027: new application',htmlContent:'<html><body style="background:#f3f4f1;color:#222;font-family:Arial;padding:32px"><p>ESRA / PRIVATE APPLICATION REVIEW</p><h1>China robotics delegation</h1>'+content+'<p>Applicant agreed to review and contact about this delegation. A submission does not confirm a place. Handle privately under ESRA’s retention policy.</p></body></html>'})
+      return reply({message:'Application submitted for private ESRA review. This does not confirm a place. ESRA will contact you about next steps.'},202)
+    }
     const access=request.headers.get('Authorization')?.replace(/^Bearer /,'')
     const identity=await verify(access,env.ACCESS_SECRET,'organiser');memberEmail(identity.email)
     if(path==='/organiser/verify')return reply({eligible:true})

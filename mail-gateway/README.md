@@ -69,3 +69,22 @@ References: [Brevo double opt-in](https://developers.brevo.com/reference/create-
 [transactional mail](https://developers.brevo.com/reference/send-transac-email),
 [RSS campaigns](https://help.brevo.com/hc/en-us/articles/360013130059-RSS-Campaign-integration-Automatically-share-your-blog-posts-with-your-subscribers),
 [Cloudflare rate limiting](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/).
+
+## Native participant application
+
+/events/china-trip-2027/apply/ is a custom ESRA form, not a Tally embed. It posts
+to /applications/china. The relay validates and emails the application privately
+to configured ESRA review inboxes using Brevo; it never creates a GitHub issue,
+adds the applicant to a mailing list, or confirms their participation. It sends
+no automatic applicant reply. Tests mock the mail provider and send no messages.
+
+Applications are separately closed by default. Before opening, the owner must
+configure APPLICATION_REVIEWERS (comma-separated designated @esrarobotics.eu
+inboxes, maximum five), confirm access and retention/deletion arrangements for
+those inboxes and the provider, finalise the applicant privacy information, then
+set APPLICATIONS_ENABLED=true in the Worker and applicationsOpen=true in
+/events/mail-config.json. EMAIL_ENABLED, EMAIL_FROM and provider credentials are
+also required. No review recipients are silently assigned. The current form
+states that submissions are not open and disables its submit button. There is
+no browser draft storage, file upload, separate applicant database or CV storage.
+The shared per-IP limiter also applies to application submissions.

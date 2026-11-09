@@ -40,3 +40,20 @@ test('verified submission creates a signed public issue without private email or
  const proof=await verify(issue.body.split('### ESRA verification\n\n')[1],secret,'event-submission')
  assert.equal(proof.domain,'esrarobotics.eu');assert.equal(proof.event.original,undefined);assert.equal(proof.event.rules,undefined)
 })
+
+test('participant applications are private, explicitly enabled and never subscribe the applicant',async t=>{
+ const calls=[];t.mock.method(globalThis,'fetch',async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return new Response('{}',{status:201})})
+ const data={name:'Student <builder>',email:'applicant@example.com',organisation:'Robotics club',portfolio:'https://example.com/project',work:'I built a robot and contributed to perception, controls and experimental evaluation with my team.',motivation:'I want to exchange practical robotics experience and ask researchers detailed engineering questions.',contribution:'I will share the lessons through an open workshop and write a technical report with my student club.',consent:true}
+ assert.equal((await worker.fetch(request('/applications/china',data),env)).status,503)
+ assert.equal(calls.length,0)
+ const enabled={...env,APPLICATIONS_ENABLED:'true',APPLICATION_REVIEWERS:'reviewer@esrarobotics.eu'}
+ assert.equal((await worker.fetch(request('/applications/china',{...data,consent:false}),enabled)).status,400)
+ assert.equal((await worker.fetch(request('/applications/china',{...data,work:'short'}),enabled)).status,400)
+ assert.equal((await worker.fetch(request('/applications/china',data),{...enabled,APPLICATION_REVIEWERS:'bad@example.com'})).status,400)
+ assert.equal(calls.length,0)
+ assert.equal((await worker.fetch(request('/applications/china',data),enabled)).status,202)
+ assert.equal(calls.length,1);assert.equal(calls[0].url,'https://api.brevo.com/v3/smtp/email')
+ assert.deepEqual(calls[0].body.to,[{email:'reviewer@esrarobotics.eu'}])
+ assert.match(calls[0].body.htmlContent,/Student &lt;builder&gt;/)
+ assert.equal(calls[0].body.replyTo,undefined)
+})

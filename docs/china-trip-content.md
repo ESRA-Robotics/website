@@ -30,6 +30,8 @@ The organiser requested an application-led, selective delegation on 9 November
 participation, asks for evidence of meaningful work and community contribution,
 and describes the target group as standout European robotics talent. No
 acceptance rate or unsupported selection statistic is claimed. The hero links
-to the application guidance; Luma remains the first step for requests and
-updates while the dedicated participant form is prepared. The unpublished
+to application guidance and the native ESRA form at
+/events/china-trip-2027/apply/. No Tally embed or redirect is used. Luma is an
+optional event-update link. Participant submissions are disabled until the
+private mail relay and designated review inboxes are configured. The unpublished
 Tally draft is not presented as an open application.

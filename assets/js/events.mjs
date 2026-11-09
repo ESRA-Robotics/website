@@ -66,3 +66,16 @@ $('#submission-form')?.addEventListener('submit',async event=>{
   try{const data=Object.fromEntries(new FormData(form));data.rules=form.elements.rules.checked;data.start=new Date(data.start).toISOString();data.end=new Date(data.end).toISOString();const result=await mailRequest('/organiser/submit',data,organiserAccess);status(form,result.message);form.reset()}
   catch(error){status(form,error.message)}finally{button.disabled=false}
 })
+
+const participantForm=$('#participant-form')
+if(participantForm){
+  if(mail.applicationsOpen&&mail.endpoint){participantForm.querySelector('[type=submit]').disabled=false;$('#application-availability').textContent='Apply below. ESRA will review your application before confirming any place.'}
+  participantForm.addEventListener('submit',async event=>{
+    event.preventDefault();const button=participantForm.querySelector('[type=submit]');button.disabled=true
+    try{
+      if(!mail.applicationsOpen)throw Error('Applications are not open yet. Please check back for updates.')
+      const data=Object.fromEntries(new FormData(participantForm));data.consent=participantForm.elements.consent.checked
+      const result=await mailRequest('/applications/china',data);status(participantForm,result.message);participantForm.reset()
+    }catch(error){status(participantForm,error.message)}finally{button.disabled=!mail.applicationsOpen}
+  })
+}

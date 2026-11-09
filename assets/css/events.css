@@ -194,3 +194,5 @@
 .events-page .detail-hero #trip-title { font-size:clamp(44px,5.4vw,82px); }
 .events-page .trip-promise { padding:45px 0; border-top:1px solid var(--rule); }
 @media(max-width:809px){ .events-page .hackathon-feature { grid-template-columns:1fr; gap:24px; } .events-page dialog { padding:28px 22px; } .events-page #result-count { margin-left:0; } }
+
+@media(min-width:600px){ .events-page #participant-form .filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }

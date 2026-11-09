@@ -79,8 +79,9 @@ bundle. The standalone event pages do not hydrate.
 
 `/events/china-trip-2027/` retains the ESRA Original delegation page and provisional
 Notion-grounded outreach targets. See [source reconciliation](china-trip-content.md).
-Hosts, route, funding and costs are not confirmed. The unpublished participant
-Tally form is not linked as a public application.
+Hosts, route, funding and costs are not confirmed. The participant application is a native ESRA form at /events/china-trip-2027/apply/;
+submissions stay closed until the private delivery service is activated. Tally
+is not embedded or linked for participant applications.
 
 The main-site `CNAME` remains `esrarobotics.eu`. An optional static export uses:
 
