@@ -84,12 +84,12 @@ const MIME = {
 }
 
 const CHROMES = [
+  process.env.CHROME_PATH,
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   '/usr/bin/google-chrome',
   '/usr/bin/google-chrome-stable',
   '/usr/bin/chromium',
   '/usr/bin/chromium-browser',
-  process.env.CHROME_PATH,
 ].filter(Boolean)
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
@@ -117,19 +117,31 @@ async function connect(chromePath) {
   const proc = spawn(chromePath, [
     '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
     '--hide-scrollbars', '--no-sandbox', '--disable-application-cache',
+    // Hosted runners can have a small /dev/shm; use the temp directory instead.
+    '--disable-dev-shm-usage',
     `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, 'about:blank',
-  ], { stdio: 'ignore' })
+  ], { stdio: ['ignore', 'ignore', 'pipe'] })
+  let diagnostics = '', launchError, exited = false, exitInfo = ''
+  proc.stderr.on('data', (chunk) => { diagnostics = (diagnostics + chunk).slice(-8000) })
+  proc.once('error', (error) => { launchError = error })
+  proc.once('exit', (code, signal) => { exited = true; exitInfo = `exit ${code}, signal ${signal}` })
 
   let target
-  for (let i = 0; i < 60; i++) {
+  // Allow slower hosted runners to start, but report a crash immediately.
+  for (let i = 0; i < 180; i++) {
+    if (launchError || exited) break
     try {
-      const list = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json()
+      const list = await (await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(1000) })).json()
       target = list.find((t) => t.type === 'page')
       if (target) break
     } catch { /* not up yet */ }
     await sleep(250)
   }
-  if (!target) { proc.kill(); rmSync(profile, { recursive: true, force: true }); throw new Error('Chrome did not start') }
+  if (!target) {
+    proc.kill()
+    try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }) } catch { /* preserve the startup error */ }
+    throw new Error(`Chrome did not start (${chromePath}; ${launchError?.message || exitInfo || 'startup timed out'}).\n${diagnostics.trim() || 'No browser stderr was emitted.'}`)
+  }
 
   const ws = new WebSocket(target.webSocketDebuggerUrl)
   let id = 0
