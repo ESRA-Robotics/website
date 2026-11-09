@@ -241,6 +241,6 @@ trip details, and the optional `events.esrarobotics.eu` export/deployment setup.
 
 Event submissions now use public GitHub issues and maintainer-reviewed updates.
 Review notifications use GitHub's email settings. A small optional Brevo/Cloudflare
-relay connects on-site email signup and verified ESRA organiser submissions;
+relay connects on-site email signup and ESRA organiser proposals with manual identity review;
 activation still requires provider credentials and deployment. The frontend and
 RSS/calendar feeds remain static. See [mail relay setup](mail-gateway/README.md).

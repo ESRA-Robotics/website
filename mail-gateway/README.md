@@ -1,90 +1,65 @@
 # Optional ESRA mail relay
 
-The website stays on GitHub Pages. This dependency-free Cloudflare Worker keeps
-Brevo and GitHub credentials off the static site. Brevo stores the mailing list;
-there is no custom subscriber database. The popup and organiser sign-in remain
-inside the ESRA UI. **Not deployed or enabled by this branch. No email was sent.**
+The website remains on GitHub Pages. This dependency-free Cloudflare Worker
+keeps Brevo and GitHub credentials off the static site. Brevo owns the mailing
+list; there is no custom subscriber database. **Not deployed or enabled by this
+branch. No emails or live submissions were sent during implementation.**
 
-## Activation by the account owner
+## Activation
 
-1. Create/select ESRA's Brevo account, verify its sender/domain, create an events
-   list and a double-opt-in template. Include the provider confirmation link in
-   that template. Configure unsubscribe links and the ESRA identity/contact in
-   every campaign. Confirm provider terms, processing agreement and privacy copy
-   before enabling collection.
-2. Deploy `worker.mjs` using `wrangler.toml` with Wrangler 4.36 or later. Choose
-   an unused rate-limit namespace in the account. Store BREVO_API_KEY,
-   BREVO_LIST_ID, BREVO_DOI_TEMPLATE_ID, EMAIL_FROM, ACCESS_SECRET,
-   EVENT_SUBMISSION_SECRET and GITHUB_TOKEN as Worker secrets (see the example).
-   Generate independent random secrets of at least 32 characters. The GitHub
-   token needs only Issues write on ESRA-Robotics/website; no Contents permission.
-3. Set the identical EVENT_SUBMISSION_SECRET in repository Actions secrets.
-   It authenticates the exact public event payload before the moderation workflow
-   prepares a publication PR. Keep both copies private and rotate together.
-4. Set SITE_ORIGIN to https://esrarobotics.eu and ALLOWED_ORIGINS to the actual
-   permitted website origins. Add the optional events subdomain only when active.
-   Set EMAIL_ENABLED=true only after these steps. Put the deployed HTTPS Worker
-   origin (no trailing slash) into events/mail-config.json as `endpoint`.
-5. Configure Brevo's RSS Campaign integration for the confirmed events list,
-   using https://esrarobotics.eu/events/feeds/all.xml. Choose the desired cadence
-   and review the email template; the integration supports up to ten feed items
-   per campaign. Account access is required to activate the campaign. Publishing
-   a catalogue update alone does not send a newsletter until this is configured.
-6. Test confirmation, unsubscribe, organiser sign-in and a reviewed submission
-   with an explicitly authorised test recipient. This implementation has only
-   exercised mocked provider requests, never real delivery.
+1. Select ESRA's Brevo account, verify its sender/domain, create an events list
+   and a double-opt-in template containing the provider confirmation link.
+   Configure unsubscribe links, ESRA identity and privacy information. Confirm
+   provider terms and processing arrangements before enabling collection.
+2. Deploy worker.mjs using wrangler.toml with Wrangler 4.36 or later. Choose an
+   unused rate-limit namespace. Set BREVO_API_KEY, BREVO_LIST_ID,
+   BREVO_DOI_TEMPLATE_ID, EVENT_SUBMISSION_SECRET and GITHUB_TOKEN privately.
+   Generate a random submission secret of at least 32 characters. The GitHub
+   token needs only Issues write on ESRA-Robotics/website.
+3. Set the same EVENT_SUBMISSION_SECRET in repository Actions secrets. It signs
+   the exact public proposal so manual issues cannot bypass input validation.
+   It does not prove the organiser's identity or ownership of their inbox.
+4. Set SITE_ORIGIN and ALLOWED_ORIGINS to the actual website origins. Set
+   EMAIL_ENABLED=true after configuration and put the deployed HTTPS Worker
+   origin in events/mail-config.json as endpoint. No credentials belong there.
+5. Configure Brevo's RSS Campaign integration against
+   https://esrarobotics.eu/events/feeds/all.xml for the confirmed list, with the
+   desired cadence and template. The integration supports up to ten items per
+   campaign. Without account configuration, publishing does not send newsletters.
+6. Test double opt-in, unsubscribe and reviewed submission with an explicitly
+   authorised test recipient. Current tests mock every external request.
 
-## Behaviour and limits
+## Initial event submission flow
 
-POST /subscribe requests provider-managed double opt-in; it never silently adds
-unconfirmed contacts. POST /organiser/request-link permits the exact
-@esrarobotics.eu domain and emails a signed 20-minute access link. The token is
-read from a URL fragment and removed from the address bar. It is reusable until
-expiry (stateless, not a one-time token); protect it like a password. Sign-in
-links should not be forwarded. No private email is copied into public issues.
+There is one visible ESRA organiser form, with no sign-in or emailed access link.
+POST /organiser/submit checks the entered email has the exact @esrarobotics.eu
+domain, validates the event and prepares a public GitHub review issue. The email
+is omitted from the issue. The proof and issue explicitly say self-declared:
+**anyone can type an ESRA address; inbox ownership is not verified.** Maintainers
+must verify the actual club/organiser before approving. Authentication can be
+added later. There is no automatic publication or ability to assign Original
+status. A signed issue expires after seven days; request a fresh proposal if
+review takes longer. GitHub notifications and human-reviewed merge remain the
+publication workflow. Custom accept/decline HTML review emails are not active.
 
-POST /organiser/submit validates the token and event, strips untrusted extra
-fields, and creates a public GitHub review issue with a seven-day signed payload.
-Review it within that period or request a fresh submission. Submitters cannot
-assign ESRA Original status. A maintainer still reviews and merges the update.
-Review notifications use GitHub settings; custom accept/decline HTML emails are
-not implemented. Configure the three trusted reviewers' verified notification
-addresses in their own GitHub accounts; never assume their account names.
+POST /subscribe requests provider-managed double opt-in and never silently adds
+unconfirmed contacts. No browser address storage, cookies or subscriber files.
+The application does not log request bodies or tokens; Worker observability is
+disabled in the supplied config. The approximate limiter allows ten requests
+per minute per IP per Cloudflare location; shared networks can hit it and
+multi-location abuse can exceed it. Use provider quotas/abuse controls at launch.
+CORS is a browser boundary, not authentication. Unavailable service returns an
+error instead of reporting a saved submission.
 
-Cloudflare's per-IP limiter is an approximate ten requests/minute per location;
-shared networks may hit it, and distributed abuse can exceed it. Use provider
-quotas and Cloudflare abuse controls for production traffic. No request bodies,
-addresses or tokens are logged in application code; Worker observability is
-disabled in the supplied config. CORS is a browser boundary, not authentication.
-No cookies or local subscriber storage are used. Frontend errors never report
-that an address was saved when the service is unavailable.
+China applications go directly to https://luma.com/m5dh07ac. The native
+participant form and its private-mail endpoint have been removed.
 
-## Offline verification
+## Offline checks
 
-`node --test mail-gateway/test-worker.mjs` stubs every network request. Run
-`python3 -m unittest discover -s scripts -p 'test_event_access.py'` for moderation
-attestation checks. Do not substitute real provider credentials into tests.
+`node --test mail-gateway/test-worker.mjs` mocks all requests. Run
+`python3 -m unittest discover -s scripts -p 'test_event_access.py'` for signed
+proposal checks. Never substitute live provider credentials into these tests.
 
 References: [Brevo double opt-in](https://developers.brevo.com/reference/create-doi-contact),
-[transactional mail](https://developers.brevo.com/reference/send-transac-email),
 [RSS campaigns](https://help.brevo.com/hc/en-us/articles/360013130059-RSS-Campaign-integration-Automatically-share-your-blog-posts-with-your-subscribers),
 [Cloudflare rate limiting](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/).
-
-## Native participant application
-
-/events/china-trip-2027/apply/ is a custom ESRA form, not a Tally embed. It posts
-to /applications/china. The relay validates and emails the application privately
-to configured ESRA review inboxes using Brevo; it never creates a GitHub issue,
-adds the applicant to a mailing list, or confirms their participation. It sends
-no automatic applicant reply. Tests mock the mail provider and send no messages.
-
-Applications are separately closed by default. Before opening, the owner must
-configure APPLICATION_REVIEWERS (comma-separated designated @esrarobotics.eu
-inboxes, maximum five), confirm access and retention/deletion arrangements for
-those inboxes and the provider, finalise the applicant privacy information, then
-set APPLICATIONS_ENABLED=true in the Worker and applicationsOpen=true in
-/events/mail-config.json. EMAIL_ENABLED, EMAIL_FROM and provider credentials are
-also required. No review recipients are silently assigned. The current form
-states that submissions are not open and disables its submit button. There is
-no browser draft storage, file upload, separate applicant database or CV storage.
-The shared per-IP limiter also applies to application submissions.

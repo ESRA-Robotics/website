@@ -17,22 +17,8 @@
       "start": "2027-03-14T00:00:00+08:00",
       "end": "2027-03-23T23:59:59+08:00",
       "url": "/events/china-trip-2027/",
-      "description": "Go where robotics gets built. A proposed ESRA delegation connecting European builders with robotics labs, companies and student communities in China.",
+      "description": "An ESRA robotics delegation to China: university and company exchanges, plus a planned 12–24-hour Booster T2 humanoid hackathon with FC Isar Robotics. Dates, hosts and programme provisional.",
       "original": true
-    }
-  ],
-  "planned": [
-    {
-      "id": "robot-football-hackathon",
-      "title": "Code. Kick. Repeat.",
-      "subtitle": "Robot Football Hackathon",
-      "type": "Hackathons",
-      "organiser": "ESRA × FC Isar Robotics",
-      "location": "Location to be announced",
-      "status": "In planning",
-      "url": "/events/robot-football-hackathon/",
-      "description": "Take a soccer robot from seeing the ball to playing the game. A proposed hands-on collaboration with FC Isar Robotics. Dates and programme to follow.",
-      "original": false
     }
   ]
 }

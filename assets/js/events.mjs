@@ -5,7 +5,7 @@ const mail=await fetch('/events/mail-config.json').then(r=>r.json()).catch(()=>(
 function node(tag,text,cls){const e=document.createElement(tag);if(text)e.textContent=text;if(cls)e.className=cls;return e}
 function status(form,text){form.querySelector('.form-status').textContent=text}
 async function mailRequest(path,data,access){
-  if(!mail.endpoint)throw Error('Email signup and organiser access are being connected. Please try again soon.')
+  if(!mail.endpoint)throw Error('Event submissions and email signup are being connected. Please try again soon.')
   const url=new URL(mail.endpoint);if(url.protocol!=='https:'||url.username||url.password)throw Error('Email service is not configured correctly.')
   const headers={'Content-Type':'application/json'};if(access)headers.Authorization='Bearer '+access
   const response=await fetch(mail.endpoint.replace(/\/$/,'')+path,{method:'POST',headers,body:JSON.stringify(data),referrerPolicy:'no-referrer'})
@@ -40,9 +40,8 @@ if($('#listing-types')){
       link.href=event.url;link.rel='noopener'
       card.append(node('span',event.original?'ESRA Original':event.organiser,'status mono'),title,node('p',event.type+' · '+event.location,'mono'),node('p',fmt.format(new Date(event.start))+' – '+fmt.format(new Date(event.end))),node('p',event.description),link);container.append(card)
     }
-    const planning=(catalog.planned||[]).filter(e=>period==='upcoming'&&types.includes(e.type)&&(origin==='all'||e.original===(origin==='original'))&&(!club||e.organiser.toLowerCase().includes(club)))
-    $('#planned-events').hidden=!planning.length;$('#empty-events').hidden=selected.length>0||planning.length>0
-    $('#result-count').textContent=matching.length+' scheduled'+(planning.length?' · '+planning.length+' in planning':'')
+    $('#empty-events').hidden=selected.length>0
+    $('#result-count').textContent=matching.length+' event'+(matching.length===1?'':'s')
     $('#period-heading').textContent={upcoming:'Upcoming events',current:'Happening now',past:'Past events'}[period]
     for(const button of document.querySelectorAll('[data-period]'))button.setAttribute('aria-pressed',String(button.dataset.period===period))
     const search=new URLSearchParams({network:origin,period});for(const type of types)search.append('type',type);if(!types.length)search.append('type','none');if(club)search.set('club',club)
@@ -54,28 +53,8 @@ if($('#listing-types')){
   more.addEventListener('click',()=>{shown+=25;render()});render()
   if(params.get('subscribed')==='confirmed'){dialog.showModal();status($('#newsletter-form'),'Email confirmed. Welcome to the European robotics network.')}
 }
-let organiserAccess=new URLSearchParams(location.hash.slice(1)).get('access')
-if(organiserAccess){history.replaceState(null,'',location.pathname+location.search);try{await mailRequest('/organiser/verify',{},organiserAccess);$('#submission-form').hidden=false;$('#organiser-login').hidden=true;$('#organiser-state').textContent='ESRA email verified. Your submission will be reviewed before publication.'}catch(error){organiserAccess=null;$('#organiser-state').textContent=error.message}}
-$('#organiser-login')?.addEventListener('submit',async event=>{
-  event.preventDefault();const form=event.currentTarget,email=form.elements.email.value.trim().toLowerCase(),button=form.querySelector('button')
-  if(!/^[^\s@]+@esrarobotics\.eu$/.test(email)){status(form,'Use your @esrarobotics.eu address.');return}
-  button.disabled=true;try{status(form,(await mailRequest('/organiser/request-link',{email})).message)}catch(error){status(form,error.message)}finally{button.disabled=false}
-})
 $('#submission-form')?.addEventListener('submit',async event=>{
   event.preventDefault();const form=event.currentTarget,button=form.querySelector('[type=submit]');button.disabled=true
-  try{const data=Object.fromEntries(new FormData(form));data.rules=form.elements.rules.checked;data.start=new Date(data.start).toISOString();data.end=new Date(data.end).toISOString();const result=await mailRequest('/organiser/submit',data,organiserAccess);status(form,result.message);form.reset()}
+  try{const data=Object.fromEntries(new FormData(form));if(!/^[^\s@]+@esrarobotics\.eu$/.test(data.email.trim().toLowerCase()))throw Error('Use your @esrarobotics.eu address.');data.rules=form.elements.rules.checked;data.start=new Date(data.start).toISOString();data.end=new Date(data.end).toISOString();const result=await mailRequest('/organiser/submit',data);status(form,result.message);form.reset()}
   catch(error){status(form,error.message)}finally{button.disabled=false}
 })
-
-const participantForm=$('#participant-form')
-if(participantForm){
-  if(mail.applicationsOpen&&mail.endpoint){participantForm.querySelector('[type=submit]').disabled=false;$('#application-availability').textContent='Apply below. ESRA will review your application before confirming any place.'}
-  participantForm.addEventListener('submit',async event=>{
-    event.preventDefault();const button=participantForm.querySelector('[type=submit]');button.disabled=true
-    try{
-      if(!mail.applicationsOpen)throw Error('Applications are not open yet. Please check back for updates.')
-      const data=Object.fromEntries(new FormData(participantForm));data.consent=participantForm.elements.consent.checked
-      const result=await mailRequest('/applications/china',data);status(participantForm,result.message);participantForm.reset()
-    }catch(error){status(participantForm,error.message)}finally{button.disabled=!mail.applicationsOpen}
-  })
-}

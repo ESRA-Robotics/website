@@ -196,3 +196,34 @@
 @media(max-width:809px){ .events-page .hackathon-feature { grid-template-columns:1fr; gap:24px; } .events-page dialog { padding:28px 22px; } .events-page #result-count { margin-left:0; } }
 
 @media(min-width:600px){ .events-page #participant-form .filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+/* ESRA ownership and expedition art */
+.events-page .original-brand { display:flex; align-items:center; gap:18px; background:var(--yellow); border:1px solid var(--ink); padding:16px 20px; margin-bottom:24px; width:100%; }
+.events-page .original-brand img { width:68px; height:auto; flex-shrink:0; }
+.events-page .original-brand strong { display:block; font-size:19px; letter-spacing:.035em; }
+.events-page .original-brand span { display:block; font-size:12px; margin-top:3px; }
+.events-page .china-cover { position:relative; padding:0; margin:32px 0; overflow:hidden; background:var(--ink); color:var(--paper); min-height:580px; }
+.events-page .china-cover > .cover { height:100%; min-height:580px; object-fit:cover; object-position:60% center; }
+.events-page .cover-caption { position:absolute; inset:0; padding:28px; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(180deg,rgba(0,0,0,.25),transparent 35%,rgba(0,0,0,.8)); }
+.events-page .cover-caption strong { margin-top:auto; font-size:clamp(40px,4.7vw,70px); line-height:1; letter-spacing:-.045em; font-weight:500; }
+.events-page .cover-caption > span:last-child { color:var(--yellow); margin-top:18px; }
+.events-page .expedition-visual { background:var(--ink); }
+.events-page .expedition-visual > img { aspect-ratio:1/1; object-fit:cover; object-position:60% center; }
+.events-page .expedition-caption { padding:26px; color:var(--paper); }
+.events-page .expedition-caption p { padding:0; margin:22px 0; font-size:clamp(32px,3.5vw,50px); line-height:1; letter-spacing:-.04em; }
+.events-page .expedition-caption span { padding:0; color:var(--yellow); }
+.events-page .trip-edition { margin-bottom:22px; }
+.events-page .humanoid-hackathon { display:grid; grid-template-columns:1fr 1.15fr; gap:56px; padding:42px; background:var(--yellow); margin:12px 0 56px; border-top:6px solid var(--ink); }
+.events-page .humanoid-hackathon h2 { font-size:clamp(36px,4.8vw,68px); }
+.events-page .humanoid-hackathon .status { border:1px solid var(--ink); margin:8px 0; }
+.events-page .sprint-steps { list-style:none; padding:0; margin:28px 0; }
+.events-page .sprint-steps li { padding:14px 0; border-top:1px solid var(--rule); }
+.events-page .sprint-steps p { margin:8px 0 0; }
+.events-page .destination-panorama { width:100%; height:auto; margin-bottom:34px; }
+@media(max-width:809px){
+ .events-page .humanoid-hackathon { grid-template-columns:1fr; gap:20px; padding:26px; }
+ .events-page .china-cover { min-height:440px; margin:24px 0 0; }
+ .events-page .china-cover > .cover { min-height:440px; }
+ .events-page .original-brand { gap:12px; padding:14px; }
+ .events-page .original-brand img { width:52px; }
+ .events-page .original-brand strong { font-size:16px; }
+}

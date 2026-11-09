@@ -19,41 +19,20 @@ test('provider failure and rate limiting never return a saved-subscription succe
  assert.equal((await worker.fetch(request('/subscribe',{email:'a@example.com',consent:true}),env)).status,400)
  assert.equal((await worker.fetch(request('/subscribe',{}),{...env,RATE_LIMITER:{limit:async()=>({success:false})}})).status,429)
 })
-test('only exact ESRA domain can request a signed inbox link',async t=>{
- const calls=[];t.mock.method(globalThis,'fetch',async(url,options)=>{calls.push(JSON.parse(options.body));return new Response('{}',{status:201})})
- for(const email of ['a@example.com','a@esrarobotics.eu.attacker.com','a@attacker-esrarobotics.eu'])assert.equal((await worker.fetch(request('/organiser/request-link',{email}),env)).status,400)
- assert.equal(calls.length,0)
- assert.equal((await worker.fetch(request('/organiser/request-link',{email:'A@ESRAROBOTICS.EU'}),env)).status,202)
- const token=calls[0].htmlContent.match(/#access=([\w.-]+)/)[1]
- assert.equal((await verify(token,secret,'organiser')).email,'a@esrarobotics.eu')
- assert.equal((await worker.fetch(request('/organiser/verify',{},token),env)).status,200)
-})
-test('expired, altered, wrong-purpose and absent credentials cannot submit',async()=>{
- for(const token of [undefined,await sign({purpose:'organiser',email:'a@esrarobotics.eu',expires:1},secret),await sign({purpose:'other',expires:Date.now()/1000+60},secret),'invalid.token'])assert.equal((await worker.fetch(request('/organiser/submit',{},token),env)).status,400)
-})
-test('verified submission creates a signed public issue without private email or Original privilege',async t=>{
+test('initial organiser proposal is signed, explicitly unverified and never grants Original privilege',async t=>{
  let issue;t.mock.method(globalThis,'fetch',async(url,options)=>{assert.match(url,/api.github.com/);issue=JSON.parse(options.body);return new Response('{}',{status:201})})
- const access=await sign({purpose:'organiser',email:'private@esrarobotics.eu',expires:Date.now()/1000+60},secret)
  const event={title:'Robot workshop',organiser:'Member club',location:'Munich',description:'A practical student robotics workshop with technical exchange.',relevance:'Connect student robotics teams across Europe.',type:'Workshops',url:'https://example.com/event',start:'2027-04-02T12:00:00Z',end:'2027-04-02T14:00:00Z',rules:true,original:true,email:'private@esrarobotics.eu'}
- assert.equal((await worker.fetch(request('/organiser/submit',event,access),env)).status,202)
+ assert.equal((await worker.fetch(request('/organiser/submit',event),env)).status,202)
  assert.ok(!issue.body.includes('private@'))
  const proof=await verify(issue.body.split('### ESRA verification\n\n')[1],secret,'event-submission')
- assert.equal(proof.domain,'esrarobotics.eu');assert.equal(proof.event.original,undefined);assert.equal(proof.event.rules,undefined)
+ assert.equal(proof.verification,'self-declared');assert.match(issue.body,/inbox ownership is not verified/);assert.equal(proof.domain,'esrarobotics.eu');assert.equal(proof.event.original,undefined);assert.equal(proof.event.rules,undefined)
 })
 
-test('participant applications are private, explicitly enabled and never subscribe the applicant',async t=>{
- const calls=[];t.mock.method(globalThis,'fetch',async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return new Response('{}',{status:201})})
- const data={name:'Student <builder>',email:'applicant@example.com',organisation:'Robotics club',portfolio:'https://example.com/project',work:'I built a robot and contributed to perception, controls and experimental evaluation with my team.',motivation:'I want to exchange practical robotics experience and ask researchers detailed engineering questions.',contribution:'I will share the lessons through an open workshop and write a technical report with my student club.',consent:true}
- assert.equal((await worker.fetch(request('/applications/china',data),env)).status,503)
- assert.equal(calls.length,0)
- const enabled={...env,APPLICATIONS_ENABLED:'true',APPLICATION_REVIEWERS:'reviewer@esrarobotics.eu'}
- assert.equal((await worker.fetch(request('/applications/china',{...data,consent:false}),enabled)).status,400)
- assert.equal((await worker.fetch(request('/applications/china',{...data,work:'short'}),enabled)).status,400)
- assert.equal((await worker.fetch(request('/applications/china',data),{...enabled,APPLICATION_REVIEWERS:'bad@example.com'})).status,400)
- assert.equal(calls.length,0)
- assert.equal((await worker.fetch(request('/applications/china',data),enabled)).status,202)
- assert.equal(calls.length,1);assert.equal(calls[0].url,'https://api.brevo.com/v3/smtp/email')
- assert.deepEqual(calls[0].body.to,[{email:'reviewer@esrarobotics.eu'}])
- assert.match(calls[0].body.htmlContent,/Student &lt;builder&gt;/)
- assert.equal(calls[0].body.replyTo,undefined)
+
+test('event form checks exact ESRA email domain without requiring sign-in',async t=>{
+ let calls=0;t.mock.method(globalThis,'fetch',async()=>{calls++;return new Response('{}',{status:201})})
+ for(const address of ['a@example.com','a@esrarobotics.eu.attacker.com','a@attacker-esrarobotics.eu'])assert.equal((await worker.fetch(request('/organiser/submit',{email:address}),env)).status,400)
+ assert.equal(calls,0)
+ assert.equal((await worker.fetch(request('/applications/china',{}),env)).status,404)
+ assert.equal((await worker.fetch(request('/organiser/request-link',{}),env)).status,404)
 })

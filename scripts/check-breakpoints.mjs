@@ -69,14 +69,12 @@ const FOOTER_LINKS = ['HOME', 'WHO WE ARE', 'PILLARS', 'MEMBER CLUBS', 'EVENTS',
 const MUST_NOT_BE_COVERED = ['JOIN ESRA', 'Who are we looking for?', 'STRONG PARTNERS']
 const IMPRINT_REQUIRED = ['Register number: VR 211579', 'DE462819831', 'Privacy Policy', 'Controller']
 const EVENT_PAGES = [
-  ['/events/', ['BUILDERS.', 'CHINA', 'Explore the delegation', 'Subscribe to all events', 'Submit an event', 'CODE. KICK.']],
-  ['/events/china-trip-2027/apply/', ['SHOW US', 'Participant application', 'What have you built', 'Submit my application']],
-  ['/events/submit/', ['FOR ESRA', 'ESRA email', 'Email me a sign-in link']],
-  ['/events/robot-football-hackathon/', ['CODE. KICK.', 'FC Isar Robotics', 'Dates, venue and registration']],
-  ['/events/review/', ['REVIEW.', 'Review guidelines']],
-  ['/events/preferences/', ['FOLLOW YOUR INTERESTS.', 'static website']],
-  ['/events/rules/', ['SHARED RULES.', 'How review works']],
-  ['/events/china-trip-2027/', ['CHINA', 'FRONTIER.', '14–23 March 2027', 'How to apply', 'Prepare my application', 'EARN YOUR PLACE.', 'Prepare your application:', 'Before making plans', 'Meet your delegation.', 'PROOF OF WORK.', 'READY TO']],
+  ['/events/', ['BUILDERS', 'CHINA', 'Explore the delegation', 'Subscribe to all events', 'Submit an event']],
+  ['/events/submit/', ['FOR ESRA', 'Your ESRA email', 'Send event for review']],
+  ['/events/review/', ['REVIEW', 'Review guidelines']],
+  ['/events/preferences/', ['FOLLOW YOUR INTERESTS', 'static website']],
+  ['/events/rules/', ['SHARED RULES', 'How review works']],
+  ['/events/china-trip-2027/', ['CHINA', 'FRONTIER', '14–23 March 2027', 'Apply on Luma', 'Apply for the ESRA delegation', 'EARN YOUR PLACE', 'Booster T2', 'FC Isar Robotics', 'Prepare your application:', 'Before making plans', 'Meet your delegation', 'PROOF OF WORK', 'READY TO']],
 ]
 
 const MIME = {

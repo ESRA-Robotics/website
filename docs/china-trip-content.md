@@ -29,9 +29,11 @@ The organiser requested an application-led, selective delegation on 9 November
 2026. Website copy now requires an application and ESRA confirmation before
 participation, asks for evidence of meaningful work and community contribution,
 and describes the target group as standout European robotics talent. No
-acceptance rate or unsupported selection statistic is claimed. The hero links
-to application guidance and the native ESRA form at
-/events/china-trip-2027/apply/. No Tally embed or redirect is used. Luma is an
-optional event-update link. Participant submissions are disabled until the
-private mail relay and designated review inboxes are configured. The unpublished
-Tally draft is not presented as an open application.
+acceptance rate or unsupported selection statistic is claimed. China application buttons now link directly to Luma at the organiser's request.
+The native participant form and endpoint were removed. On 9 November the
+organiser clarified that FC Isar Robotics participates in China, with a planned
+12–24-hour humanoid hackathon on Booster T2 robots and a challenge against the
+team. It is no longer a separate event listing. Final platform access, location,
+duration and challenge details are not yet confirmed. The new cover is an
+AI-generated concept illustration, not a depiction of a Booster T2 robot or a
+record of confirmed visits.

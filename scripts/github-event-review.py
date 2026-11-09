@@ -31,6 +31,7 @@ def main():
         print('Submission declined on GitHub. No website content changed.');return
     if issue.get('state')!='open':raise SystemExit('Reopen the issue before preparing a new event update')
     verify_issue(issue.get('body'),os.environ.get('EVENT_SUBMISSION_SECRET',''))
+    print('Initial setup: organiser email is self-declared. Verify the actual organiser before approving.')
     path=Path(os.environ['RUNNER_TEMP'])/'event-issue.json';path.write_text(json.dumps(issue))
     run('python3','scripts/prepare-event-review.py',str(path))
     run('python3','scripts/check.py')

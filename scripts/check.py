@@ -41,8 +41,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 PAGES = ["index.html", "imprint/index.html", "404.html", "events/index.html",
-         "events/china-trip-2027/index.html", "events/china-trip-2027/apply/index.html", "events/submit/index.html",
-         "events/review/index.html", "events/preferences/index.html", "events/rules/index.html", "events/robot-football-hackathon/index.html"]
+         "events/china-trip-2027/index.html", "events/submit/index.html",
+         "events/review/index.html", "events/preferences/index.html", "events/rules/index.html"]
 REQUIRED_FILES = PAGES + ["CNAME", "README.md", "AGENTS.md"]
 
 # Which JavaScript bundle React hydrates each page from. The 404 page is

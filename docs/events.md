@@ -3,19 +3,20 @@
 The attendee-facing website remains static on GitHub Pages, main branch,
 repository root. Event discovery, detail pages, filters and RSS/calendar feeds
 work without a backend. The optional mail relay in [mail-gateway](../mail-gateway/README.md)
-connects the on-site signup and ESRA organiser sign-in to Brevo and GitHub.
+connects the on-site signup and ESRA organiser submissions to Brevo and GitHub.
 It is prepared but not deployed: events/mail-config.json has an empty endpoint,
 so the UI reports unavailable service rather than pretending to save addresses.
 No provider account, list, campaign or secrets were configured, and no mail sent.
 
 ## Submissions and review
 
-An organiser requests a private sign-in link at /events/submit/ using their
-exact @esrarobotics.eu address. The relay validates inbox access with a signed
-20-minute link, then accepts a public event proposal into a GitHub issue. Private
-organiser email stays out of that issue. The form is unavailable without valid
-access. Opening a GitHub issue manually does not bypass this check: the review
-workflow verifies the relay's signed payload using EVENT_SUBMISSION_SECRET.
+An organiser fills one visible form at /events/submit/ using an
+@esrarobotics.eu address. No sign-in link is required in this initial setup.
+The relay checks the declared domain and signs the exact validated public event
+payload before creating a GitHub review issue. This is not inbox verification:
+anyone can type an ESRA address. The issue labels it self-declared, and reviewers
+must verify the actual organiser before approval. Private email is omitted from
+the issue. Manually created or altered issues cannot bypass the payload signature.
 
 A maintainer checks relevance, organiser, dates, registration, costs and accuracy.
 Run Review community event with the issue number and prepare, or apply the
@@ -43,11 +44,11 @@ Provider-managed unsubscribe links handle removal. Activation and privacy
 requirements are documented with the relay.
 
 Filters sit inside a quiet disclosure. Upcoming, ongoing and past events stay
-separate. Scheduled events are paginated; undated proposals appear separately
-under On the drawing board and are excluded from calendars. Original events have
+separate. Scheduled events are paginated. Original events have
 prominent branding; community listings show their club and location. RSS and
 calendar feeds remain available as alternatives, including type/club feeds.
-The proposed FC Isar robot-football hackathon has no confirmed date or venue.
+The planned FC Isar Booster T2 hackathon is part of the China delegation, not a
+separate event. It has no independently published date or venue.
 
 ## Content maintenance
 
@@ -79,9 +80,10 @@ bundle. The standalone event pages do not hydrate.
 
 `/events/china-trip-2027/` retains the ESRA Original delegation page and provisional
 Notion-grounded outreach targets. See [source reconciliation](china-trip-content.md).
-Hosts, route, funding and costs are not confirmed. The participant application is a native ESRA form at /events/china-trip-2027/apply/;
-submissions stay closed until the private delivery service is activated. Tally
-is not embedded or linked for participant applications.
+Hosts, route, funding and costs are not confirmed. China applications link
+directly to Luma. The native participant application form and endpoint have been
+removed. The user added a planned 12–24-hour Booster T2 humanoid hackathon with
+FC Isar Robotics; final delivery details remain to be confirmed.
 
 The main-site `CNAME` remains `esrarobotics.eu`. An optional static export uses:
 
