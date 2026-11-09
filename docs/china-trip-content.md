@@ -22,3 +22,14 @@ Tsinghua's Beijing campus. It does not repeat unsourced company market shares,
 production-rate claims, internal personal contacts or speculative budgets from
 those notes. March dates remain provisional. Organisers must reconcile the final
 route and confirm hosts before these are presented as a committed itinerary.
+
+## Participation positioning
+
+The organiser requested an application-led, selective delegation on 9 November
+2026. Website copy now requires an application and ESRA confirmation before
+participation, asks for evidence of meaningful work and community contribution,
+and describes the target group as standout European robotics talent. No
+acceptance rate or unsupported selection statistic is claimed. The hero links
+to the application guidance; Luma remains the first step for requests and
+updates while the dedicated participant form is prepared. The unpublished
+Tally draft is not presented as an open application.

@@ -75,7 +75,7 @@ const EVENT_PAGES = [
   ['/events/review/', ['REVIEW.', 'Review guidelines']],
   ['/events/preferences/', ['FOLLOW YOUR INTERESTS.', 'static website']],
   ['/events/rules/', ['SHARED RULES.', 'How review works']],
-  ['/events/china-trip-2027/', ['CHINA', 'FRONTIER.', '14–23 March 2027', 'View on Luma', 'Before making plans', 'Meet your delegation.', 'PROOF OF WORK.', 'READY TO']],
+  ['/events/china-trip-2027/', ['CHINA', 'FRONTIER.', '14–23 March 2027', 'How to apply', 'Request to join on Luma', 'EARN YOUR PLACE.', 'Prepare your application:', 'Before making plans', 'Meet your delegation.', 'PROOF OF WORK.', 'READY TO']],
 ]
 
 const MIME = {
