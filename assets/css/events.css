@@ -104,3 +104,32 @@
   }
   .esra-events-mobile:focus-visible { outline: 3px solid #866d00; outline-offset: 2px; }
 }
+.events-page .small { font-size: 13px; line-height: 1.6; }
+.events-page .event-types { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 30px; }
+.events-page .event-types span { border:1px solid var(--rule); padding:7px 12px; }
+.events-page .publish-block { background:var(--yellow); padding:36px; margin-top:40px; }
+.events-page .publish-block ol { padding-left:20px; }
+.events-page .publish-block .small { margin-top:18px; }
+.events-page .trip-visual { background:#222; color:var(--paper); align-self:stretch; display:flex; flex-direction:column; }
+.events-page .trip-visual img { width:100%; height:340px; object-fit:cover; }
+.events-page .trip-visual p { font-size:clamp(22px,3vw,39px); text-transform:uppercase; padding:30px; line-height:1.2; }
+.events-page .trip-visual span { padding:0 30px 30px; margin-top:auto; }
+.events-page .network-proof { padding:55px 0; border-top:1px solid var(--rule); }
+.events-page .network-proof > p { max-width:760px; }
+.events-page .network-logos { display:flex; gap:40px; flex-wrap:wrap; align-items:center; padding:25px 0; }
+.events-page .network-logos img { width:130px; height:55px; object-fit:contain; }
+.events-page .journey { display:grid; grid-template-columns:1fr 1.15fr; gap:60px; padding:50px 0; }
+.events-page .timeline { list-style:none; padding:0; margin:0; border-left:1px solid var(--ink); }
+.events-page .timeline li { position:relative; padding:0 0 32px 32px; }
+.events-page .timeline li::before { content:""; position:absolute; width:11px; height:11px; background:var(--ink); left:-6px; top:5px; border-radius:50%; }
+.events-page .timeline h3 { margin:10px 0; }
+.events-page .timeline li:last-child { padding-bottom:0; }
+.events-page .selection { padding:40px; background:#e8e9e5; margin-bottom:50px; }
+.events-page .photo-credit { margin-bottom:35px; }
+@media(max-width:809px) {
+ .events-page .journey { grid-template-columns:1fr; gap:30px; }
+ .events-page .trip-visual img { height:260px; }
+ .events-page .selection,.events-page .publish-block { padding:24px; }
+ .events-page .network-logos { gap:25px; }
+ .events-page .network-logos img { width:100px; }
+}

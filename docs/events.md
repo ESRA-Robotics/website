@@ -64,3 +64,19 @@ Keep the main navigation pointed to `/events/` until the subdomain is live;
 then change its href in both homepage copies if the subdomain is preferred.
 
 GitHub reference: [Custom domains and GitHub Pages](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages).
+
+## Community submissions
+
+The Submit an event link opens `.github/ISSUE_TEMPLATE/event.yml` on GitHub.
+Organisers submit public information using their own GitHub account; ESRA reviews
+the issue and adds approved listings to the static collection. This is moderated
+submission, not automatic publication. Event categories describe supported formats,
+not announced events. Confirm Issues are enabled in repository settings before launch.
+
+ESRA Original identifies ESRA-organised programming; community listings must credit
+their own organiser. Do not imply ESRA organises every submitted event.
+
+The China timeline is an illustrative programme, not a confirmed itinerary. Network
+logos refer to the existing wider ESRA network, not selected fellows or trip hosts.
+No acceptance-rate, alumni or confirmed-access claims have been added. Destination
+photography is credited in the page and is not evidence of past or confirmed visits.
