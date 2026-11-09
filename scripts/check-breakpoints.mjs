@@ -59,7 +59,7 @@ const HOME_REQUIRED = ['APPLY NOW', 'first intake', 'Who are we looking for?']
  * Footer links. IMPRINT and PRIVACY are not optional: German law wants the
  * imprint reachable from every page, and all six vanished below 634px once.
  */
-const FOOTER_LINKS = ['HOME', 'WHO WE ARE', 'PILLARS', 'MEMBER CLUBS', 'IMPRINT', 'PRIVACY']
+const FOOTER_LINKS = ['HOME', 'WHO WE ARE', 'PILLARS', 'MEMBER CLUBS', 'EVENTS', 'IMPRINT', 'PRIVACY']
 
 /**
  * Text that must not only exist but be clickable-through, that is, not sitting
@@ -68,6 +68,10 @@ const FOOTER_LINKS = ['HOME', 'WHO WE ARE', 'PILLARS', 'MEMBER CLUBS', 'IMPRINT'
  */
 const MUST_NOT_BE_COVERED = ['JOIN ESRA', 'Who are we looking for?', 'STRONG PARTNERS']
 const IMPRINT_REQUIRED = ['Register number: VR 211579', 'DE462819831', 'Privacy Policy', 'Controller']
+const EVENT_PAGES = [
+  ['/events/', ['EVENTS', 'CHINA', 'TRIP 2027', 'Explore the trip']],
+  ['/events/china-trip-2027/', ['CHINA', 'TRIP 2027', '14–23 March 2027', 'View on Luma', 'Before making plans']],
+]
 
 const MIME = {
   '.html': 'text/html', '.mjs': 'text/javascript', '.js': 'text/javascript',
@@ -209,6 +213,9 @@ const PROBE = `JSON.stringify((function () {
     numbers: texts.filter(function (x) { return /^0\\.\\d+\\/$/.test(x.t); }).map(function (x) { return x.t; }),
     labels: texts.map(function (x) { return x.t; }),
     footer: footer,
+    eventLinks: [].slice.call(document.querySelectorAll('a[href="/events/"]'))
+      .filter(function (a) { return a.offsetParent; })
+      .map(function (a) { return a.getBoundingClientRect().top + window.scrollY; }),
     covered: covered,
     body: document.body.innerText
   };
@@ -230,6 +237,7 @@ async function measure(send, url, width) {
 }
 
 function checkHome(width, d, fail) {
+  if (!d.eventLinks.some((y) => y < 250)) fail(`${width}px: no Events link near the top of the home page`)
   // Sections must appear in the expected reading order.
   const seen = []
   for (const label of d.labels) {
@@ -289,6 +297,16 @@ async function main() {
       }
       for (const want of IMPRINT_REQUIRED) {
         if (!imprint.body.includes(want)) fail(`${width}px: imprint is missing ${JSON.stringify(want)}`)
+      }
+      for (const [path, required] of EVENT_PAGES) {
+        const event = await measure(send, `http://127.0.0.1:${PORT}${path}`, width)
+        if (event.overflow) fail(`${width}px: ${path} scrolls sideways (${event.scrollWidth}px)`)
+        for (const want of required) {
+          if (!event.body.toLowerCase().includes(want.toLowerCase())) fail(`${width}px: ${path} is missing ${JSON.stringify(want)}`)
+        }
+        for (const want of ['HOME', 'EVENTS', 'IMPRINT', 'PRIVACY']) {
+          if (!event.footer.some((text) => text.toUpperCase() === want)) fail(`${width}px: ${path} footer is missing ${want}`)
+        }
       }
       console.log(`  checked ${String(width).padStart(4)}px`)
     }

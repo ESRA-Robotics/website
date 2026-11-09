@@ -40,7 +40,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-PAGES = ["index.html", "imprint/index.html", "404.html"]
+PAGES = ["index.html", "imprint/index.html", "404.html", "events/index.html",
+         "events/china-trip-2027/index.html"]
 REQUIRED_FILES = PAGES + ["CNAME", "README.md", "AGENTS.md"]
 
 # Which JavaScript bundle React hydrates each page from. The 404 page is
@@ -91,6 +92,7 @@ def iter_source_files():
             yield p
     for p in sorted((ROOT / "assets" / "js").glob("*.mjs")):
         yield p
+    yield from sorted((ROOT / "assets" / "css").glob("*.css"))
 
 
 def check_required_files() -> None:
@@ -119,7 +121,7 @@ def check_no_remote_requests() -> None:
 def check_asset_references() -> None:
     """Every /assets/... path referenced anywhere must exist on disk."""
     referenced: set[str] = set()
-    pattern = re.compile(r"/assets/(?:images|fonts|js)/[A-Za-z0-9_.@=-]+")
+    pattern = re.compile(r"/assets/(?:images|fonts|js|css)/[A-Za-z0-9_.@=-]+")
 
     for path in iter_source_files():
         text = path.read_text(errors="replace")
@@ -144,7 +146,7 @@ def check_asset_references() -> None:
 
 
 def check_orphans(referenced: set[str]) -> None:
-    for directory in ("images", "fonts", "js"):
+    for directory in ("images", "fonts", "js", "css"):
         folder = ROOT / "assets" / directory
         if not folder.is_dir():
             continue

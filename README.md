@@ -231,3 +231,10 @@ board knows the facts behind some of the entries below.
 ## Credits
 
 Design by [Royce Malonzo](https://www.linkedin.com/in/royce-malonzo-050634263).
+
+## Events
+
+The events listing is at `/events/`, with a dedicated China Trip page at
+`/events/china-trip-2027/`. Both are plain static HTML using existing ESRA
+branding. See [the events guide](docs/events.md) for adding events, provisional
+trip details, and the optional `events.esrarobotics.eu` export/deployment setup.

@@ -1,0 +1,106 @@
+/* Shared events styling. The existing Framer export only uses the two nav rules. */
+.esra-events-nav, .esra-events-footer {
+  color: #222; font-family: "Intel One Mono", monospace; font-size: 16px;
+  line-height: 1.4; letter-spacing: -.05em; text-decoration: none; white-space: nowrap;
+}
+.esra-events-nav { font-weight: 500; flex: none; }
+.esra-events-nav:hover, .esra-events-footer:hover { text-decoration: underline; text-underline-offset: 4px; }
+.framer-SxfM8 .framer-1bdujyo { flex-wrap: wrap; gap: 12px 24px; }
+.framer-SxfM8 .framer-1d5v79y { height: auto; min-height: 40px; }
+@font-face { font-family: "Events Inter"; src: url(/assets/fonts/GrgcKwrN6d3Uz8EwcLHZxwEfC4.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Events Inter"; src: url(/assets/fonts/UjlFhCnUjxhNfep4oYBPqnEssyo.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Events Mono"; src: url(/assets/fonts/intelonemono-1d62d9bd.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Events Mono"; src: url(/assets/fonts/intelonemono-7ecc20bb.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+.events-page { --paper: #f3f4f1; --ink: #222; --rule: #b8b9b6; --yellow: #fff0b5; margin: 0; background: var(--paper); color: var(--ink); font-family: "Events Inter", Arial, sans-serif; font-size: 17px; line-height: 1.6; }
+.events-page *, .events-page *::before, .events-page *::after { box-sizing: border-box; }
+.events-page a { color: inherit; text-underline-offset: 4px; }
+.events-page a:focus-visible, .esra-events-nav:focus-visible, .esra-events-footer:focus-visible { outline: 3px solid #866d00; outline-offset: 5px; }
+.events-page .shell { width: min(88%, 1400px); margin-inline: auto; }
+.events-page .mono { font-family: "Events Mono", monospace; font-size: 14px; font-weight: 500; line-height: 1.5; text-transform: uppercase; letter-spacing: -.04em; }
+.events-page .masthead { display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--rule); padding: 22px 0 18px; }
+.events-page .masthead p { margin: 0; }
+.events-page .mark { width: 42px; height: auto; display: block; }
+.events-page .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 30px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.events-page .nav a { text-decoration: none; }
+.events-page .nav a:hover, .events-page .nav [aria-current] { text-decoration: underline; text-underline-offset: 5px; }
+.events-page h1, .events-page h2, .events-page h3, .events-page p { margin-top: 0; }
+.events-page h1 { font-weight: 500; font-size: clamp(76px, 14.6vw, 210px); letter-spacing: -.075em; line-height: .95; margin: 42px 0 32px; }
+.events-page h2 { font-size: clamp(28px, 3.5vw, 48px); font-weight: 400; letter-spacing: -.05em; line-height: 1.1; }
+.events-page h3 { font-size: 23px; font-weight: 500; letter-spacing: -.035em; line-height: 1.25; }
+.events-page .intro { display: flex; justify-content: space-between; align-items: end; gap: 30px; padding-bottom: 40px; }
+.events-page .intro p { max-width: 660px; margin-bottom: 0; font-size: clamp(19px, 2vw, 25px); line-height: 1.45; letter-spacing: -.025em; }
+.events-page .section-bar { display: flex; justify-content: space-between; gap: 24px; border-block: 1px solid var(--rule); padding: 16px 0; margin: 0; }
+.events-page .section-bar p { margin: 0; }
+.events-page .feature { display: grid; grid-template-columns: 1fr 1.15fr; border-bottom: 1px solid var(--rule); }
+.events-page .feature-art { padding: 32px 32px 32px 0; border-right: 1px solid var(--rule); }
+.events-page .cover { display: block; width: 100%; height: auto; }
+.events-page .feature-copy { padding: 40px 0 40px 40px; display: flex; flex-direction: column; align-items: start; justify-content: center; }
+.events-page .status { display: inline-block; background: var(--yellow); padding: 5px 10px; margin-bottom: 26px; }
+.events-page .feature-copy h2 { margin-bottom: 20px; font-size: clamp(38px, 4.8vw, 72px); }
+.events-page .feature-copy > p { max-width: 530px; }
+.events-page .facts { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin: 14px 0 28px; border-block: 1px solid var(--rule); }
+.events-page .facts div { padding: 16px 12px 16px 0; }
+.events-page .facts dt { margin-bottom: 5px; }
+.events-page .facts dd { margin: 0; font-size: 16px; }
+.events-page .button { display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 48px; background: var(--ink); color: var(--paper); padding: 12px 20px; text-decoration: none; border: 1px solid var(--ink); }
+.events-page .button:hover { background: #454545; }
+.events-page .button span { font-size: 24px; line-height: 1; }
+.events-page .community { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; padding: 55px 0 65px; }
+.events-page .community p { max-width: 620px; margin-bottom: 0; }
+.events-page .footer { border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 36px; padding: 28px 0 45px; }
+.events-page .footer p { max-width: 400px; }
+.events-page .footer nav { display: flex; flex-wrap: wrap; gap: 12px 24px; align-content: start; }
+.events-page .footer nav a { text-decoration: none; }
+.events-page .footer nav a:hover { text-decoration: underline; }
+.events-page .breadcrumb { display: inline-block; margin: 30px 0 0; }
+.events-page .detail-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; padding: 36px 0 48px; }
+.events-page .detail-hero h1 { font-size: clamp(62px, 7.8vw, 118px); margin: 0 0 28px; }
+.events-page .detail-hero .lede { font-size: clamp(21px, 2.1vw, 29px); line-height: 1.4; letter-spacing: -.035em; }
+.events-page .detail-hero .cover { align-self: start; }
+.events-page .detail-hero .status { margin-bottom: 20px; }
+.events-page .detail-hero .facts { margin-top: 26px; }
+.events-page .programme { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; padding: 36px 0 40px; }
+.events-page .programme p { margin-bottom: 0; }
+.events-page .programme .mono { display: block; margin-bottom: 22px; }
+.events-page .planning { display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; padding: 40px 0 50px; }
+.events-page .planning ul { padding-left: 20px; margin: 0; }
+.events-page .planning li + li { margin-top: 14px; }
+.events-page .callout { background: var(--ink); color: var(--paper); padding: 38px; margin: 0 0 60px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; }
+.events-page .callout p:last-child { margin-bottom: 0; }
+.events-page .callout .button { color: var(--ink); background: var(--yellow); border-color: var(--yellow); margin: 8px 0 18px; }
+.events-page .callout .button:hover { background: #ffe58a; }
+.events-page .skip { position: absolute; top: -100px; left: 6%; padding: 12px; background: var(--ink); color: var(--paper); z-index: 10; }
+.events-page .skip:focus { top: 8px; }
+@media (max-width: 809px) {
+  .events-page .shell { width: 88%; }
+  .events-page .masthead { gap: 16px; }
+  .events-page .masthead p { max-width: 300px; }
+  .events-page .nav { gap: 10px 20px; }
+  .events-page .intro { display: block; }
+  .events-page .intro .mono { display: block; margin-top: 24px; }
+  .events-page .feature, .events-page .detail-hero { grid-template-columns: 1fr; }
+  .events-page .feature-art { padding: 24px 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .events-page .feature-copy { padding: 28px 0 36px; }
+  .events-page .feature-copy h2 { font-size: 48px; }
+  .events-page .community, .events-page .planning, .events-page .callout { grid-template-columns: 1fr; gap: 22px; }
+  .events-page .community { padding: 36px 0; }
+  .events-page .detail-hero { gap: 30px; padding-top: 28px; }
+  .events-page .detail-hero .cover { max-width: 560px; }
+  .events-page .programme { grid-template-columns: 1fr; gap: 28px; }
+  .events-page .programme .mono { margin-bottom: 10px; }
+  .events-page .callout { padding: 26px; }
+  .events-page .footer { flex-direction: column; gap: 12px; }
+}
+@media (prefers-reduced-motion: no-preference) { .events-page .button { transition: background .15s; } }
+
+/* The original homepage removes its main navigation on phones. */
+.esra-events-mobile { display: none; }
+@media (max-width: 633.98px) {
+  .framer-SxfM8 .esra-events-mobile {
+    display: block; order: 1; align-self: stretch; padding: 12px 0;
+    border-bottom: 1px solid #b8b9b6; color: #222;
+    font: 500 14px/1.4 "Intel One Mono", monospace;
+    text-decoration: none; text-align: right;
+  }
+  .esra-events-mobile:focus-visible { outline: 3px solid #866d00; outline-offset: 2px; }
+}
