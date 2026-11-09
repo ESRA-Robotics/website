@@ -70,6 +70,10 @@ const MUST_NOT_BE_COVERED = ['JOIN ESRA', 'Who are we looking for?', 'STRONG PAR
 const IMPRINT_REQUIRED = ['Register number: VR 211579', 'DE462819831', 'Privacy Policy', 'Controller']
 const EVENT_PAGES = [
   ['/events/', ['EVENTS', 'CHINA', 'TRIP 2027', 'Explore the trip', 'Submit an event', 'YOUR EVENT.']],
+  ['/events/submit/', ['YOUR EVENT.', 'Event description', 'Submit for review']],
+  ['/events/review/', ['REVIEW.', 'Review guidelines']],
+  ['/events/preferences/', ['PREFERENCES.', 'secure link']],
+  ['/events/rules/', ['SHARED RULES.', 'How review works']],
   ['/events/china-trip-2027/', ['CHINA', 'TRIP 2027', '14–23 March 2027', 'View on Luma', 'Before making plans', 'Meet your delegation.', 'PROOF OF WORK.', 'READY TO']],
 ]
 
@@ -221,11 +225,11 @@ const PROBE = `JSON.stringify((function () {
   };
 })())`
 
-async function measure(send, url, width) {
+async function measure(send, url, width, staticPage = false) {
   await send('Emulation.setDeviceMetricsOverride',
     { width, height: 900, deviceScaleFactor: 1, mobile: width < 810 })
   await send('Page.navigate', { url })
-  await sleep(5500)
+  await sleep(staticPage ? 700 : 5500)
   // Scroll the whole page so lazily-rendered sections settle.
   await send('Runtime.evaluate', {
     expression: `(async()=>{for(let y=0;y<document.body.scrollHeight;y+=400){window.scrollTo(0,y);await new Promise(r=>setTimeout(r,25));}window.scrollTo(0,0);})()`,
@@ -299,7 +303,7 @@ async function main() {
         if (!imprint.body.includes(want)) fail(`${width}px: imprint is missing ${JSON.stringify(want)}`)
       }
       for (const [path, required] of EVENT_PAGES) {
-        const event = await measure(send, `http://127.0.0.1:${PORT}${path}`, width)
+        const event = await measure(send, `http://127.0.0.1:${PORT}${path}`, width, true)
         if (event.overflow) fail(`${width}px: ${path} scrolls sideways (${event.scrollWidth}px)`)
         for (const want of required) {
           if (!event.body.toLowerCase().includes(want.toLowerCase())) fail(`${width}px: ${path} is missing ${JSON.stringify(want)}`)

@@ -1,0 +1,4 @@
+{
+  "types": ["Trips", "Hackathons", "Workshops", "Meetups", "Build weeks", "Exchanges"],
+  "events": [{"id":"china-trip-2027","title":"China Trip 2027","type":"Trips","organiser":"ESRA","location":"China · Hong Kong / Shenzhen proposed","start":"2027-03-14T00:00:00+08:00","end":"2027-03-23T23:59:59+08:00","url":"/events/china-trip-2027/","description":"An ESRA robotics delegation. Technical exchange, university and company visits. Dates and route provisional.","original":true}]
+}

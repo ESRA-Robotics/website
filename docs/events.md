@@ -65,18 +65,33 @@ then change its href in both homepage copies if the subdomain is preferred.
 
 GitHub reference: [Custom domains and GitHub Pages](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages).
 
-## Community submissions
+## Community submissions and newsletters
 
-The Submit an event link opens `.github/ISSUE_TEMPLATE/event.yml` on GitHub.
-Organisers submit public information using their own GitHub account; ESRA reviews
-the issue and adds approved listings to the static collection. This is moderated
-submission, not automatic publication. Event categories describe supported formats,
-not announced events. Confirm Issues are enabled in repository settings before launch.
+`/events/submit/` accepts event details and the organiser's private contact email.
+`/events/rules/` explains relevance, organiser attribution, review and the service
+privacy supplement. `/events/review/` uses expiring links from trusted-reviewer
+HTML emails; accepting publishes through the API without changing Git. The
+previous GitHub-issue-only submission path is superseded.
 
-ESRA Original identifies ESRA-organised programming; community listings must credit
-their own organiser. Do not imply ESRA organises every submitted event.
+The static site stays independently usable. `events/catalog.json` defines the
+shared event types and ESRA's seed event; `events/config.json` optionally points
+to the API host. Community listings are fetched only from the approved feed.
+Organiser, location and event type are visible; ESRA Original remains a prominent
+label reserved for ESRA programming. Filters support multiple types, network and
+club, plus separate upcoming, happening-now and past views. Matching filter state
+can be copied to newsletter signup. Filters are shareable in the URL, not cookies.
 
-The China timeline is an illustrative programme, not a confirmed itinerary. Network
-logos refer to the existing wider ESRA network, not selected fellows or trip hosts.
-No acceptance-rate, alumni or confirmed-access claims have been added. Destination
-photography is credited in the page and is not evidence of past or confirmed visits.
+Newsletter signup uses explicit consent and email confirmation. Preferences and
+unsubscribe are managed at `/events/preferences/` through secure emailed links.
+Weekly digests exclude past events and use the subscriber's selected filters.
+
+See [the backend deployment guide](../backend/README.md) for the persistent API,
+trusted reviewers, sender/provider setup, SMTP dispatcher, digest and retention
+jobs. No production service, SMTP delivery or scheduling has been activated.
+Do not deploy private configuration, databases or test email previews to Pages.
+
+## China content
+
+See [source reconciliation](china-trip-content.md). Notion's academic/company
+names are outreach targets, not confirmed visits. ESRA network logos are not
+selected-fellow or host endorsements. Destination photos do not imply past visits.

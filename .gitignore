@@ -8,3 +8,9 @@ __pycache__/
 # Daily activity log for the workspace aggregator. Never commit it:
 # GitHub Pages serves this repo root publicly, so it would be published.
 outbox/
+
+# Never publish credentials, review links, submissions or subscriber details.
+backend/.env.local
+backend/private/
+*.sqlite3
+*.sqlite3-*
