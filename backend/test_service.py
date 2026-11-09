@@ -112,6 +112,67 @@ class EventsTest(unittest.TestCase):
             message=smtp.send_message.call_args[0][0]
             self.assertEqual(message['To'],'reviewer@example.org')
         with self.app.connect() as c:self.assertEqual(c.execute('SELECT state FROM outbox').fetchone()[0],'sent')
+    def publish(self,**overrides):
+        event_id=self.app.submit({**self.event,**overrides})['id']
+        self.app.review(self.app.token('review',[event_id,'reviewer@example.org']),'accept')
+        return event_id
+    def test_cursor_pages_filter_before_pagination_and_preserve_originals(self):
+        ids={self.publish(title=f'Workshop {i}') for i in range(5)}
+        query={'type':['Workshops'],'origin':['community'],'period':['upcoming'],'limit':['2']}
+        seen=[]
+        while True:
+            page=self.app.event_page(query);seen.extend(e['id'] for e in page['events'])
+            self.assertLessEqual(len(page['events']),2);self.assertEqual(page['featured'],[])
+            if not page['next_cursor']:break
+            query['cursor']=[page['next_cursor']]
+        self.assertEqual(set(seen),ids);self.assertEqual(len(seen),len(ids))
+        self.assertEqual(self.app.event_page({'club':['missing']})['events'],[])
+        self.assertEqual(self.app.event_page({'origin':['original']})['featured'][0]['id'],'china-trip-2027')
+        for bad in [{'limit':['0']},{'limit':['101']},{'cursor':['not-a-cursor']},{'type':['Spam']}]:
+            with self.assertRaises(Invalid):self.app.event_page(bad)
+    def test_concurrent_workers_claim_each_message_once(self):
+        from concurrent.futures import ThreadPoolExecutor
+        with self.app.connect() as c:
+            for i in range(12):self.app.queue(c,f'worker-test:{i}','test@example.org','Test','<p>Test</p>')
+        with ThreadPoolExecutor(max_workers=4) as pool:rows=list(pool.map(lambda _:self.app.claim_message(),range(16)))
+        ids=[row['id'] for row in rows if row]
+        self.assertEqual(len(ids),12);self.assertEqual(len(set(ids)),12)
+    def test_failed_smtp_does_not_claim_or_block_entire_queue(self):
+        with self.app.connect() as c:
+            for i in range(3):self.app.queue(c,f'delivery:{i}','test@example.org','Test','<p>Test</p>')
+        self.app.delivery=True;self.app.sender='sender@example.org'
+        with patch.dict('os.environ',{'SMTP_HOST':'smtp.example.org'}),patch('smtplib.SMTP',side_effect=OSError('offline')):
+            self.assertEqual(self.app.deliver(batch_size=1),0)
+        with self.app.connect() as c:
+            states=[r[0] for r in c.execute('SELECT state FROM outbox')]
+        self.assertEqual(states.count('uncertain'),1);self.assertEqual(states.count('pending'),2)
+    def test_existing_schema_migration_preserves_data(self):
+        legacy=self.tmp.name+'/legacy.sqlite3'
+        with sqlite3.connect(legacy) as c:
+            c.execute('CREATE TABLE events(id TEXT PRIMARY KEY,payload TEXT,contact TEXT,status TEXT,submitted REAL,reviewer TEXT,reviewed REAL)')
+            c.execute('INSERT INTO events VALUES(?,?,?,?,?,?,?)',('old',json.dumps({**self.event,'id':'old','original':False}),'private@example.org','approved',1,None,None))
+        upgraded=Service(legacy,secrets.token_urlsafe(40),self.app.site)
+        public=upgraded.event_page({'type':['Workshops']})['events'][0]
+        self.assertEqual(public['id'],'old');self.assertNotIn('email',public);self.assertNotIn('relevance',public)
+        with upgraded.connect() as c:
+            self.assertEqual(c.execute('PRAGMA journal_mode').fetchone()[0],'wal')
+            self.assertIsNotNone(c.execute('SELECT start_at FROM events').fetchone()[0])
+    def test_digest_crosses_subscriber_batches_without_loss_or_duplicates(self):
+        self.publish()
+        with self.app.connect() as c:
+            for i in range(205):
+                c.execute('INSERT INTO subscribers VALUES(?,?,1,?,?,?,?)',
+                          (f'batch{i:03d}@example.org',json.dumps({'types':['Workshops'],'origin':'community','club':''}),'test-consent',1,1,'revision'))
+        self.app.digest('2027-W03');self.app.digest('2027-W03')
+        with self.app.connect() as c:
+            self.assertEqual(c.execute("SELECT count(*) FROM outbox WHERE id LIKE 'digest:%'").fetchone()[0],205)
+    def test_multiple_service_workers_can_initialise_the_same_store(self):
+        from concurrent.futures import ThreadPoolExecutor
+        shared=self.tmp.name+'/shared.sqlite3'
+        def start(_):return Service(shared,'shared-test-secret-12345678901234567890',self.app.site)
+        with ThreadPoolExecutor(max_workers=4) as pool:workers=list(pool.map(start,range(4)))
+        self.assertEqual(len(workers),4)
+        self.assertEqual(workers[0].event_page({})['events'],[])
     def test_api_origin_and_private_files(self):
         server=ThreadingHTTPServer(('127.0.0.1',0),partial(Handler,directory=str(ROOT)));server.app=self.app
         thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()

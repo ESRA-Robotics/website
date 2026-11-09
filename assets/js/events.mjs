@@ -1,11 +1,12 @@
+import {matchesEvent,compareEvents} from './event-matching.mjs'
 // Shared listing and newsletter vocabulary; no cookies, storage or tracking.
 const $ = (s) => document.querySelector(s)
 const catalog = await fetch('/events/catalog.json').then(r => r.json())
 const config = await fetch('/events/config.json').then(r => r.json())
 const apiBase = String(config.apiBase || '').replace(/\/$/, '')
 if (apiBase && (!apiBase.startsWith('https://') || new URL(apiBase).pathname !== '/')) throw new Error('Use an HTTPS API origin')
-let ready = false
-try { ready = Boolean((await request('/health')).ready) } catch { /* Static-only mode stays usable. */ }
+let ready = false, connected = false
+try { ready = Boolean((await request('/health')).ready);connected=true } catch { /* Static-only mode stays usable. */ }
 async function request(path, data, token) {
   const headers = {Accept:'application/json'}
   if (data !== undefined) headers['Content-Type'] = 'application/json'
@@ -36,22 +37,19 @@ types($('#newsletter-types')); types($('#preference-types')); types($('#listing-
 for (const form of [$('#submission-form'),$('#subscribe-form')].filter(Boolean)) form.querySelector('[type=submit]').disabled=!ready
 if ($('#service-state')) $('#service-state').textContent=ready ? 'Submissions are reviewed before publication. Newsletter sign-up requires email confirmation.' : 'This preview has no connected event service. Submissions and subscriptions will open when the service is deployed.'
 if ($('#listing-types')) {
-  let events = catalog.events, period = 'upcoming'
-  try { const live = await request('/events');events=live.events } catch { /* Keep the published static collection. */ }
+  let events = catalog.events, period = 'upcoming', nextCursor=null, version=0, loading=false
+  const moreButton=node('button','Load more events','button mono');moreButton.type='button';moreButton.hidden=true
+  $('#community-events').after(moreButton)
   const params=new URLSearchParams(location.search)
   const requestedTypes=params.getAll('type').filter(t=>catalog.types.includes(t))
-  if(requestedTypes.length)for(const box of document.querySelectorAll('#listing-types input'))box.checked=requestedTypes.includes(box.value)
+  if(requestedTypes.length||params.getAll('type').includes('none'))for(const box of document.querySelectorAll('#listing-types input'))box.checked=requestedTypes.includes(box.value)
   if (['all','original','community'].includes(params.get('network'))) $('#origin-filter').value=params.get('network')
   $('#club-filter').value=(params.get('club') || '').slice(0,100)
   if (['upcoming','current','past'].includes(params.get('period'))) period=params.get('period')
   const fmt = new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeZone:'UTC'})
   function render() {
     const chosen=[...document.querySelectorAll('#listing-types input:checked')].map(e=>e.value),origin=$('#origin-filter').value,club=$('#club-filter').value.trim().toLowerCase(),now=new Date()
-    const selected=events.filter(e=>{
-      const starts=new Date(e.start),ends=new Date(e.end)
-      const time=period==='past'?ends<now:period==='current'?starts<=now&&ends>=now:starts>now
-      return time&&chosen.includes(e.type)&&(origin==='all'||e.original===(origin==='original'))&&(!club||e.organiser.toLowerCase().includes(club))
-    }).sort((a,b)=>Number(b.original)-Number(a.original)||(period==='past'?new Date(b.start)-new Date(a.start):new Date(a.start)-new Date(b.start)))
+    const selected=events.filter(e=>matchesEvent(e,{types:chosen,origin,club,period},now)).sort(compareEvents(period))
     const china=selected.find(e=>e.id==='china-trip-2027')
     $('#china-feature').hidden=!china
     const container=$('#community-events');container.replaceChildren()
@@ -66,21 +64,44 @@ if ($('#listing-types')) {
       card.append(badge,h,meta,date,description,link);container.append(card)
     }
     $('#empty-events').hidden=selected.length>0
-    $('#result-count').textContent=selected.length+' '+(selected.length===1?'event':'events')+' matching your filters'
+    $('#result-count').textContent=selected.length+' '+(selected.length===1?'event':'events')+(nextCursor?' shown · more available':' matching your filters')
     $('#period-heading').textContent={upcoming:'Upcoming events',current:'Happening now',past:'Past events'}[period]
     for (const button of document.querySelectorAll('[data-period]')) button.setAttribute('aria-pressed',String(button.dataset.period===period))
-    const search=new URLSearchParams({network:origin,period});for(const type of chosen)search.append('type',type);if(club)search.set('club',club)
+    const search=new URLSearchParams({network:origin,period});for(const type of chosen)search.append('type',type);if(!chosen.length)search.append('type','none');if(club)search.set('club',club)
     history.replaceState(null,'',location.pathname+'?'+search)
   }
-  for(const id of ['#listing-types','#origin-filter','#club-filter']) $(id).addEventListener('input',render)
-  for(const button of document.querySelectorAll('[data-period]')) button.addEventListener('click',()=>{period=button.dataset.period;render()})
+  async function load(reset=true) {
+    const current=++version
+    const chosen=[...document.querySelectorAll('#listing-types input:checked')].map(e=>e.value)
+    if(!connected||!chosen.length){events=chosen.length?catalog.events:[];nextCursor=null;moreButton.hidden=true;render();return}
+    const search=new URLSearchParams({origin:$('#origin-filter').value,club:$('#club-filter').value,period,limit:'25'})
+    for(const type of chosen)search.append('type',type)
+    if(!reset&&nextCursor)search.set('cursor',nextCursor)
+    loading=true;moreButton.disabled=true
+    try {
+      const live=await request('/events?'+search)
+      if(current!==version)return
+      events=reset?[...live.featured,...live.events]:[...events,...live.events]
+      nextCursor=live.next_cursor;moreButton.hidden=!nextCursor;render()
+    } catch(error) {
+      if(current!==version)return
+      if(reset)events=catalog.events
+      nextCursor=null;moreButton.hidden=true;render()
+      $('#result-count').textContent='Community listings are temporarily unavailable. Showing published ESRA events.'
+    } finally {if(current===version){loading=false;moreButton.disabled=false}}
+  }
+  let filterTimer
+  function changed(){version++;nextCursor=null;moreButton.hidden=true;render();clearTimeout(filterTimer);filterTimer=setTimeout(()=>load(),200)}
+  for(const id of ['#listing-types','#origin-filter','#club-filter'])$(id).addEventListener('input',changed)
+  for(const button of document.querySelectorAll('[data-period]'))button.addEventListener('click',()=>{period=button.dataset.period;changed()})
+  moreButton.addEventListener('click',()=>{if(!loading)load(false)})
   $('#copy-filters').addEventListener('click',()=>{
     const chosen=[...document.querySelectorAll('#listing-types input:checked')].map(e=>e.value),form=$('#subscribe-form')
     for(const box of form.querySelectorAll('[name=types]'))box.checked=chosen.includes(box.value)
     form.elements.origin.value=$('#origin-filter').value;form.elements.club.value=$('#club-filter').value
     status(form,'Your listing filters have been copied. Newsletter updates cover upcoming and ongoing events; past events are excluded.')
   })
-  render()
+  render();load()
 }
 $('#submission-form')?.addEventListener('submit',async e=>{
   e.preventDefault();const form=e.currentTarget,values=Object.fromEntries(new FormData(form))

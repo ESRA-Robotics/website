@@ -75,7 +75,7 @@ previous GitHub-issue-only submission path is superseded.
 
 The static site stays independently usable. `events/catalog.json` defines the
 shared event types and ESRA's seed event; `events/config.json` optionally points
-to the API host. Community listings are fetched only from the approved feed.
+to the API host. Community listings are fetched from the approved, paginated feed; filters are applied before pagination. Matching ESRA Originals are returned separately from community pages.
 Organiser, location and event type are visible; ESRA Original remains a prominent
 label reserved for ESRA programming. Filters support multiple types, network and
 club, plus separate upcoming, happening-now and past views. Matching filter state
@@ -95,3 +95,11 @@ Do not deploy private configuration, databases or test email previews to Pages.
 See [source reconciliation](china-trip-content.md). Notion's academic/company
 names are outreach targets, not confirmed visits. ESRA network logos are not
 selected-fellow or host endorsements. Destination photos do not imply past visits.
+
+## Shared shells
+
+Edit navigation/footer templates in `templates/events/`, then run
+`python3 scripts/sync-events-shell.py`. CI checks the committed pages match.
+These are optional maintenance tools; Pages still serves committed HTML without
+a build. The hand-written event matching module has Node tests, while backend
+integration tests exercise migration, pagination and concurrent queue behaviour.

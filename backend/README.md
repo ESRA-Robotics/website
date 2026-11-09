@@ -26,7 +26,7 @@ newsletter subscriptions. No frontend framework or build is required.
 
 ## Local development
 
-Python 3.11 or later. No packages are required for local development:
+Python 3.11 or later with SQLite 3.38+ (JSON functions). No packages are required for local development:
 
 ```sh
 python3 backend/service.py serve
@@ -104,11 +104,15 @@ after seven days, email records after 30 days and expired request-limit entries.
 
 ## Operations and limits
 
-Run one delivery worker. It claims a batch before SMTP transmission. A crash or
-ambiguous SMTP failure leaves claimed messages for administrator reconciliation;
-do not blindly reset them or they may be sent twice. Review provider logs before
-retrying. Monitor this queue and maintain private backups of the SQLite database
-and signing secret. Restoring/rotating the secret invalidates outstanding links.
+Delivery workers atomically claim one message at a time, process at most 50 per
+invocation (configurable with `deliver --batch-size 100`, maximum 500), and never
+claim the entire queue. Multiple workers may run against the same private SQLite
+file on one host. An SMTP failure marks only that message `uncertain`; a crash
+can leave one message `claimed`. Neither state is retried automatically. Review
+provider logs before retrying, because SMTP acceptance may already have occurred.
+`python3 backend/service.py stats` prints aggregate event, subscription and queue
+counts without addresses or tokens. Monitor uncertain/claimed counts and maintain
+private backups of the SQLite database and signing secret. Restoring/rotating the secret invalidates outstanding links.
 Unsubscribe removes the subscription record and pending messages. Claimed mail
 may already be in transit, so stop the worker before operational bulk removals.
 
@@ -122,3 +126,36 @@ have not been activated or verified in production.
 Before enabling collection, reconcile the public event privacy supplement with
 the controller's actual processor, hosting, retention and contact arrangements.
 The generated organisation legal page was not silently rewritten.
+
+## Growth and maintainability
+
+The public event API uses server-side filters and keyset pagination:
+`GET /api/events?type=Trips&type=Hackathons&origin=community&period=upcoming&limit=25`.
+Optional filters are `club` and `period` (`upcoming`, `current`, `past`). Page size
+is capped at 100. Reuse `next_cursor` as `cursor` with the same filters for the
+next page. `featured` contains matching curated ESRA Originals independently
+of the community page, so original programming stays visible even as clubs add
+more events. The browser has a Load more action, debounces filtering and ignores
+out-of-order responses. Static-only fallback uses the separately tested matching
+module. Adding an event type still starts in `events/catalog.json`.
+
+SQLite runs in WAL mode with indexed public-event and queue queries and a busy
+timeout for concurrent workers. Startup applies an additive migration to existing
+event records in bounded batches; back up the database before first deployment
+of this version. Never run schema migration with a delivery worker active. Digest
+preparation reads 200 subscribers at a time, uses short queue-write transactions
+and rechecks consent/preferences before queuing. It reads only ongoing/upcoming
+events, excluding the historical archive from newsletter matching.
+
+This remains a **single-host** service with a private local SQLite file. Do not
+put the file on a shared network filesystem or run independent hosts against it.
+Multi-host deployment requires a shared transactional database and queue with
+matching claim/idempotency guarantees; that migration has not been implemented
+or load-tested. No throughput or recipient-volume target is claimed here.
+
+Public event-page header/footer markup lives in `templates/events/`. Run
+`python3 scripts/sync-events-shell.py` after a template edit; commit the rendered
+HTML. The `--check` mode detects drift in CI without adding a website build step.
+Environment keys are listed in `backend/.env.example`; actual secrets and trusted
+reviewer addresses stay in ignored private configuration. CI tests filtering,
+API pagination, old-schema migration, concurrent claims and failed SMTP isolation.

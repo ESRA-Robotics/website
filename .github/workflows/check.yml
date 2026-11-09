@@ -2,7 +2,7 @@ name: Check site
 
 on:
   push:
-    branches: [main]
+    branches: [main, esra-events]
   pull_request:
   workflow_dispatch:
 
@@ -19,6 +19,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      - name: Check shared event page shells
+        run: python3 scripts/sync-events-shell.py --check
+
+      - name: Test event matching
+        run: node --test scripts/test-event-matching.mjs
+
+      - name: Test event service (email mocked)
+        run: python3 -m unittest discover -s backend -p 'test_*.py'
 
       - name: Check the files
         run: python3 scripts/check.py

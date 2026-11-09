@@ -1,7 +1,7 @@
 """Production API entry point. Serve with a production WSGI host; no static files."""
 import json
 import os
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs
 from service import configured_service, Invalid
 
 _service = None
@@ -27,7 +27,7 @@ def application(environ, start_response):
             return reply('200 OK',{})
         if method=='GET':
             if path=='/api/health':result={'ready':bool(app.reviewers),'delivery':app.delivery}
-            elif path=='/api/events':result={'events':app.events()}
+            elif path=='/api/events':result=app.event_page(parse_qs(environ.get('QUERY_STRING','')))
             elif path=='/api/review':result=app.review(token)
             elif path=='/api/preferences':result=app.manage(token)
             else:return reply('404 Not Found',{'error':'Not found'})
